@@ -1,9 +1,11 @@
 import { useSettings } from "@/lib/settings";
 import { Section, ToggleRow } from "./shared";
+import { useT } from "@/lib/i18n";
 
 type SongCardStyle = "compact" | "cinematic";
 
 export function SongCardStylePicker() {
+  const t = useT();
   const { settings, update } = useSettings();
   const enabled = settings.songIdEnabled ?? false;
   const value = (settings.songCardStyle ?? "cinematic") as SongCardStyle;
@@ -23,12 +25,12 @@ export function SongCardStylePicker() {
 
   return (
     <Section
-      title="Now Playing card"
-      subtitle="Adds an Identify-song button to the player that recognizes the current music via AudD and shows a Now Playing card. Off by default; needs an AudD key below."
+      title={t("Now Playing card")}
+      subtitle={t("Adds an Identify-song button to the player that recognizes the current music via AudD and shows a Now Playing card. Off by default; needs an AudD key below.")}
     >
       <ToggleRow
-        label="Identify the current song"
-        sub="Show the in-player Identify-song button and Now Playing card."
+        label={t("Identify the current song")}
+        sub={t("Show the in-player Identify-song button and Now Playing card.")}
         value={enabled}
         onChange={(v) => update({ songIdEnabled: v })}
       />
@@ -58,17 +60,17 @@ export function SongCardStylePicker() {
                   >
                     {active ? <span className="h-2 w-2 rounded-full bg-accent" /> : null}
                   </span>
-                  <span className="text-[13px] font-semibold text-ink">{o.label}</span>
+                  <span className="text-[13px] font-semibold text-ink">{t(o.label)}</span>
                 </div>
-                <span className="text-[12px] leading-snug text-ink-muted">{o.desc}</span>
+                <span className="text-[12px] leading-snug text-ink-muted">{t(o.desc)}</span>
               </button>
             );
           })}
         </div>
 
         <ToggleRow
-          label="Show track details"
-          sub="Display the artist and album under the title on the card."
+          label={t("Show track details")}
+          sub={t("Display the artist and album under the title on the card.")}
           value={settings.songCardDetails ?? true}
           onChange={(v) => update({ songCardDetails: v })}
         />

@@ -3,6 +3,7 @@ import { AddonLogo } from "@/components/addon-logo";
 import { FormatBadge, type BadgeKind } from "@/components/format-badge";
 import { useHydratedPoster } from "@/lib/sample-artwork";
 import poster1 from "@/assets/preview/poster1.webp";
+import { useT } from "@/lib/i18n";
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,7 @@ export function PickerLayoutPreview({ value }: { value: "condensed" | "stremio" 
 }
 
 function CondensedMock() {
+  const t = useT();
   const poster = useHydratedPoster("tt15239678", poster1);
   return (
     <>
@@ -62,7 +64,7 @@ function CondensedMock() {
       </section>
 
       <div className="flex flex-col gap-2.5">
-        <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">Switch quality</p>
+        <p className="text-[11px] font-bold uppercase tracking-[0.32em] text-ink-subtle">{t("Switch quality")}</p>
         <div className="grid grid-cols-3 gap-2">
           {TIERS.map((tier, i) => (
             <div
@@ -89,7 +91,7 @@ function CondensedMock() {
       </div>
 
       <div className="flex items-center justify-between rounded-2xl bg-elevated/40 px-4 py-3 ring-1 ring-edge-soft/50">
-        <span className="text-[13px] font-medium text-ink-muted">All sources</span>
+        <span className="text-[13px] font-medium text-ink-muted">{t("All sources")}</span>
         <ChevronDown size={16} className="text-ink-subtle" />
       </div>
     </>
@@ -170,12 +172,13 @@ function SourceRow({ src, filename }: { src: (typeof SOURCES)[number]; filename?
 }
 
 function StremioMock() {
+  const t = useT();
   return (
     <>
       <div className="flex items-center justify-between gap-3 rounded-2xl bg-elevated/60 px-4 py-2.5 text-[14px] font-medium text-ink ring-1 ring-edge-soft">
         <div className="flex items-center gap-3">
           <GridIcon />
-          <span>All</span>
+          <span>{t("All")}</span>
         </div>
         <ChevronDown size={18} strokeWidth={2.2} className="text-ink-muted" />
       </div>

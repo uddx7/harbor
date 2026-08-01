@@ -336,6 +336,7 @@ function RuleEditor({
   onSave: (rule: Rule) => void;
   onCancel: () => void;
 }) {
+  const t = useT();
   const [draft, setDraft] = useState<Rule>(rule);
 
   const setEvent = (event: WebhookTrigger["event"]) => {
@@ -456,11 +457,11 @@ function RuleEditor({
                 }}
                 className="h-4 w-4 accent-ink"
               />
-              <span className="text-[12.5px] text-ink">Only my favorited channels</span>
+              <span className="text-[12.5px] text-ink">{t("Only my favorited channels")}</span>
             </label>
             <label className="flex items-center gap-3">
               <span className="w-[140px] shrink-0 text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
-                Heads up
+                {t("Heads up")}
               </span>
               <select
                 value={String(

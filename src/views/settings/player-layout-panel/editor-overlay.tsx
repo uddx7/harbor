@@ -19,6 +19,7 @@ import {
 import { setPlaybackClock } from "@/lib/player/playback-clock";
 import { DefaultLayout, FauxBackdrop, StremioLayout, TopRow } from "./editor-chrome";
 import { buildDefaultCtx, buildStremioCtx, type PlayerMode } from "./editor-mock-ctx";
+import { useT } from "@/lib/i18n";
 import { EditorPanels } from "./editor-panels";
 import { FloatingInspector } from "./floating-inspector";
 import { ProfilePicker } from "./profile-picker";
@@ -381,11 +382,12 @@ function HiddenTray({
   onUnhide: (id: PlayerControlId) => void;
   onSelect: (id: PlayerControlId | null) => void;
 }) {
+  const t = useT();
   const hidden = config.controls.filter((c) => c.hidden && controlAppliesToMode(c.id, mode));
   if (hidden.length === 0) return null;
   return (
     <div className="flex shrink-0 items-center gap-3 overflow-x-auto border-b border-white/8 px-8 py-2.5">
-      <span className="shrink-0 text-[10.5px] font-bold uppercase tracking-[0.24em] text-white/40">Hidden</span>
+      <span className="shrink-0 text-[10.5px] font-bold uppercase tracking-[0.24em] text-white/40">{t("Hidden")}</span>
       <div className="flex items-center gap-1.5">
         {hidden.map((c) => (
           <button

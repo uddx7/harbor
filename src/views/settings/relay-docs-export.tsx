@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Check, FolderOpen, X } from "lucide-react";
 import { saveTextFileWithPath } from "@/lib/download-text";
+import { useT } from "@/lib/i18n";
 
 export function DownloadMenu({
   docsRef,
@@ -103,6 +104,7 @@ function DownloadGlyph() {
 }
 
 export function SavePill({ path, onDismiss }: { path: string; onDismiss: () => void }) {
+  const t = useT();
   const reveal = async () => {
     try {
       const { revealItemInDir } = await import("@tauri-apps/plugin-opener");
@@ -120,7 +122,7 @@ export function SavePill({ path, onDismiss }: { path: string; onDismiss: () => v
           <Check size={13} strokeWidth={2.8} />
         </span>
         <div className="flex min-w-0 flex-col">
-          <span className="text-[12.5px] font-semibold leading-tight text-ink">Saved</span>
+          <span className="text-[12.5px] font-semibold leading-tight text-ink">{t("Saved")}</span>
           <span className="truncate text-[11px] leading-tight text-ink-subtle" title={path}>
             {dir || name}
           </span>
@@ -131,7 +133,7 @@ export function SavePill({ path, onDismiss }: { path: string; onDismiss: () => v
           className="ms-1 flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-raised px-3 text-[11.5px] font-semibold text-ink-muted transition-colors hover:bg-canvas hover:text-ink"
         >
           <FolderOpen size={13} strokeWidth={2.2} />
-          Show
+          {t("Show")}
         </button>
         <button
           type="button"

@@ -2,6 +2,7 @@ import { Image as ImageIcon, Layers, RotateCcw, Upload } from "lucide-react";
 import { useRef, useState, type ChangeEvent } from "react";
 import type { PlayerControlId } from "@/lib/player-chrome";
 import { getIconPresets, presetThumb, type IconPreset } from "@/lib/player-icon-presets";
+import { useT } from "@/lib/i18n";
 
 const MAX_BYTES = 256 * 1024;
 const WARN_BYTES = Math.floor(MAX_BYTES * 0.8);
@@ -27,10 +28,11 @@ export function IconUpload({
   onApplyToAll?: (dataUrl: string) => void;
   controlId?: PlayerControlId;
 }) {
+  const t = useT();
   if (!replaceable) {
     return (
       <span className="flex h-9 items-center whitespace-nowrap rounded-lg bg-white/4 px-3 text-[10px] uppercase tracking-[0.16em] text-white/35">
-        Icon locked
+        {t("Icon locked")}
       </span>
     );
   }
@@ -58,12 +60,13 @@ function PresetRow({
   presets: IconPreset[];
   onUpload: (dataUrl: string, state?: string) => void;
 }) {
+  const t = useT();
   const apply = (p: IconPreset) => {
     for (const [state, url] of Object.entries(p.icons)) onUpload(url, state === "default" ? undefined : state);
   };
   return (
     <div className="flex items-center gap-1">
-      <span className="text-[9px] uppercase tracking-[0.14em] text-white/40">Preset</span>
+      <span className="text-[9px] uppercase tracking-[0.14em] text-white/40">{t("Preset")}</span>
       {presets.map((p) => (
         <button
           key={p.id}

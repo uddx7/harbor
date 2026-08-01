@@ -10,8 +10,10 @@ import {
   type DownloadItem,
 } from "@/lib/download/downloads-store";
 import { fmtBytes, fmtEta, fmtSpeed } from "./downloads-format";
+import { useT } from "@/lib/i18n";
 
 export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?: boolean }) {
+  const t = useT();
   const { openPlayer } = useView();
   const { settings } = useSettings();
   const poster = usePosterChain(
@@ -80,37 +82,39 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
               <>
                 <Check size={13} className="text-accent" strokeWidth={2.6} />
                 <span className="text-ink-muted">
-                  Saved{d.streamLabel ? ` · ${d.streamLabel}` : ""}
+                  {t("Saved")}{d.streamLabel ? ` · ${d.streamLabel}` : ""}
                   {d.totalBytes ? ` · ${fmtBytes(d.totalBytes)}` : ""}
                 </span>
               </>
             )}
-            {d.status === "error" && <span className="text-danger">Failed: {d.error ?? "download error"}</span>}
-            {d.status === "canceled" && <span className="text-ink-subtle">Canceled</span>}
+            {d.status === "error" && (
+              <span className="text-danger">{t("Failed: {error}", { error: d.error ?? t("download error") })}</span>
+            )}
+            {d.status === "canceled" && <span className="text-ink-subtle">{t("Canceled")}</span>}
             {d.status === "interrupted" && (
-              <span className="text-amber-300/85">Interrupted: re-download to finish</span>
+              <span className="text-amber-300/85">{t("Interrupted: re-download to finish")}</span>
             )}
           </span>
         )}
       </div>
       <div className="flex shrink-0 items-center gap-1">
         {downloading ? (
-          <RowBtn label="Cancel download" onClick={() => cancelDownload(d.id)}>
+          <RowBtn label={t("Cancel download")} onClick={() => cancelDownload(d.id)}>
             <X size={16} strokeWidth={2.2} />
           </RowBtn>
         ) : (
           <>
             {d.status === "done" && (
               <>
-                <RowBtn label="Play" onClick={playLocal}>
+                <RowBtn label={t("Play")} onClick={playLocal}>
                   <Play size={16} strokeWidth={2.2} fill="currentColor" />
                 </RowBtn>
-                <RowBtn label="Show in folder" onClick={() => void revealDownload(d.id)}>
+                <RowBtn label={t("Show in folder")} onClick={() => void revealDownload(d.id)}>
                   <FolderOpen size={16} strokeWidth={2} />
                 </RowBtn>
               </>
             )}
-            <RowBtn label="Delete download and file" onClick={() => removeDownload(d.id)}>
+            <RowBtn label={t("Delete download and file")} onClick={() => removeDownload(d.id)}>
               <Trash2 size={16} strokeWidth={2} />
             </RowBtn>
           </>

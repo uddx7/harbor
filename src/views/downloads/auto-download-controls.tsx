@@ -2,6 +2,7 @@ import { Check, ChevronDown } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnchoredMenu } from "@/components/anchored-menu";
 import type { AutoDlStop } from "@/lib/auto-download";
+import { t } from "@/lib/i18n";
 
 export const CHECK_INTERVAL_MS = 6 * 60 * 60 * 1000;
 
@@ -15,22 +16,22 @@ export function useNow(everyMs = 60_000): number {
 }
 
 export function nextCheckText(nextRunAt: number | null, now: number): string {
-  if (nextRunAt == null) return "checks periodically";
+  if (nextRunAt == null) return t("checks periodically");
   const delta = nextRunAt - now;
-  if (delta <= 60_000) return "checks any moment";
-  if (delta < 3_600_000) return `checks in ${Math.floor(delta / 60_000)}m`;
-  if (delta < 86_400_000) return `checks in ${Math.floor(delta / 3_600_000)}h`;
-  return `checks in ${Math.floor(delta / 86_400_000)}d`;
+  if (delta <= 60_000) return t("checks any moment");
+  if (delta < 3_600_000) return t("checks in {n}m", { n: Math.floor(delta / 60_000) });
+  if (delta < 86_400_000) return t("checks in {n}h", { n: Math.floor(delta / 3_600_000) });
+  return t("checks in {n}d", { n: Math.floor(delta / 86_400_000) });
 }
 
 export function airText(nextAirDate: number | null, now: number): string | null {
   if (nextAirDate == null) return null;
   const delta = nextAirDate - now;
   if (delta <= 0) return null;
-  if (delta < 86_400_000) return `next airs in ${Math.max(1, Math.floor(delta / 3_600_000))}h`;
+  if (delta < 86_400_000) return t("next airs in {n}h", { n: Math.max(1, Math.floor(delta / 3_600_000)) });
   const days = Math.floor(delta / 86_400_000);
-  if (days <= 21) return `next airs in ${days}d`;
-  return `next airs in ${Math.floor(days / 7)}w`;
+  if (days <= 21) return t("next airs in {n}d", { n: days });
+  return t("next airs in {n}w", { n: Math.floor(days / 7) });
 }
 
 export const QUALITY_OPTIONS: { value: number | null; label: string }[] = [
@@ -41,7 +42,7 @@ export const QUALITY_OPTIONS: { value: number | null; label: string }[] = [
 ];
 
 export function qualityLabel(maxHeight: number | null): string {
-  return QUALITY_OPTIONS.find((o) => o.value === maxHeight)?.label ?? "any quality";
+  return t(QUALITY_OPTIONS.find((o) => o.value === maxHeight)?.label ?? "any quality");
 }
 
 export const P2P_OPTIONS: { value: boolean; label: string }[] = [
@@ -50,7 +51,7 @@ export const P2P_OPTIONS: { value: boolean; label: string }[] = [
 ];
 
 export function p2pLabel(allowP2p: boolean): string {
-  return allowP2p ? "allow P2P downloads" : "cached only";
+  return t(allowP2p ? "allow P2P downloads" : "cached only");
 }
 
 export const STOP_OPTIONS: { value: AutoDlStop; label: string }[] = [
@@ -63,9 +64,9 @@ export const STOP_OPTIONS: { value: AutoDlStop; label: string }[] = [
 ];
 
 export function stopLabel(stop: AutoDlStop): string {
-  if (stop.kind === "off") return "until I stop";
-  if (stop.kind === "seasonEnd") return "until the season ends";
-  return `for ${stop.value} more episode${stop.value === 1 ? "" : "s"}`;
+  if (stop.kind === "off") return t("until I stop");
+  if (stop.kind === "seasonEnd") return t("until the season ends");
+  return t("for {n} more episodes", { n: stop.value });
 }
 
 export function stopEquals(a: AutoDlStop, b: AutoDlStop): boolean {
@@ -115,7 +116,7 @@ export function InlineChoice<T,>({
                   active ? "text-ink" : "text-ink-muted hover:bg-elevated/60 hover:text-ink"
                 }`}
               >
-                {o.label}
+                {t(o.label)}
                 {active && <Check size={14} className="text-accent" />}
               </button>
             );

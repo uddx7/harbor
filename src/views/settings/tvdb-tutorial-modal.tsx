@@ -1,6 +1,7 @@
 import { Check, ExternalLink, KeyRound, X } from "lucide-react";
 import { useEffect } from "react";
 import { openUrl } from "@/lib/window";
+import { useT } from "@/lib/i18n";
 import tvdb1 from "@/assets/tvdb-guide/tvdb1.png";
 import tvdb2 from "@/assets/tvdb-guide/tvdb2.png";
 import tvdb3 from "@/assets/tvdb-guide/tvdb3.png";
@@ -52,6 +53,7 @@ function linkify(text: string) {
 }
 
 export function TvdbGuideModal({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const t = useT();
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -77,9 +79,9 @@ export function TvdbGuideModal({ open, onClose }: { open: boolean; onClose: () =
             </span>
             <div className="flex flex-col">
               <h2 className="font-display text-[20px] font-medium tracking-tight text-ink">
-                Get your free TheTVDB key
+                {t("Get your free TheTVDB key")}
               </h2>
-              <p className="text-[12.5px] text-ink-muted">About a minute. Free for personal use.</p>
+              <p className="text-[12.5px] text-ink-muted">{t("About a minute. Free for personal use.")}</p>
             </div>
           </div>
           <button

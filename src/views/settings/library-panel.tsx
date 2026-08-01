@@ -1059,6 +1059,7 @@ const LOGO_SIZES: DropdownOption[] = [
 ];
 
 function ArtworkSwatch({ ratio }: { ratio: "portrait" | "landscape" | "logo" }) {
+  const t = useT();
   const art = useSampleArtwork();
   if (ratio === "logo") {
     return (
@@ -1071,7 +1072,7 @@ function ArtworkSwatch({ ratio }: { ratio: "portrait" | "landscape" | "logo" }) 
             className="max-h-6 max-w-full object-contain"
           />
         ) : (
-          <span className="font-display text-[13px] italic tracking-tight text-ink/50">Logo</span>
+          <span className="font-display text-[13px] italic tracking-tight text-ink/50">{t("Logo")}</span>
         )}
       </div>
     );
@@ -1244,12 +1245,13 @@ function RetentionPicker({ value, onChange }: { value: number; onChange: (v: num
 }
 
 function ClearSnapshotsButton() {
+  const tr = useT();
   const [count, setCount] = useState<number>(() => snapshotCount());
   const [confirming, setConfirming] = useState(false);
   useEffect(() => {
     if (!confirming) return;
-    const t = window.setTimeout(() => setConfirming(false), 4000);
-    return () => window.clearTimeout(t);
+    const timeout = window.setTimeout(() => setConfirming(false), 4000);
+    return () => window.clearTimeout(timeout);
   }, [confirming]);
   const onClick = () => {
     if (!confirming) {
@@ -1264,11 +1266,11 @@ function ClearSnapshotsButton() {
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl border border-edge-soft bg-canvas/40 px-3.5 py-2.5">
       <div className="flex flex-col gap-0.5">
-        <p className="text-[12.5px] font-medium text-ink">Clear all saved frames</p>
+        <p className="text-[12.5px] font-medium text-ink">{tr("Clear all saved frames")}</p>
         <p className="text-[11.5px] leading-snug text-ink-subtle">
           {count > 0
-            ? `${count} frame${count === 1 ? "" : "s"} stored. Wiping rebuilds them next time you watch.`
-            : "No frames stored yet. They'll appear here as you watch things."}
+            ? tr("{n} frames stored. Wiping rebuilds them next time you watch.", { n: count })
+            : tr("No frames stored yet. They'll appear here as you watch things.")}
         </p>
       </div>
       <button

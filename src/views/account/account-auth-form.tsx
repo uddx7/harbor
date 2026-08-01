@@ -6,6 +6,7 @@ import { accountErrorMessage } from "@/lib/account/error-messages";
 import { PasswordField, TextField } from "./fields";
 import { AccountRecoverForm } from "./account-recover-form";
 import { AccountValueProps } from "./account-value-props";
+import { useT } from "@/lib/i18n";
 
 type Mode = "signin" | "register";
 
@@ -17,6 +18,7 @@ const MODES: { id: Mode; label: string; action: string }[] = [
 const USERNAME_RE = /^[a-zA-Z0-9_]{3,24}$/;
 
 export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) => void }) {
+  const t = useT();
   const [view, setView] = useState<"auth" | "recover">("auth");
   const [mode, setMode] = useState<Mode>("register");
   const [username, setUsername] = useState("");
@@ -30,7 +32,7 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
   const ready = usernameOk && passwordOk;
   const usernameHint =
     mode === "register" && trimmed.length > 0 && !usernameOk
-      ? "3 to 24 letters, numbers, or underscores."
+      ? t("3 to 24 letters, numbers, or underscores.")
       : undefined;
 
   const submit = async () => {
@@ -73,12 +75,12 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
         </span>
         <div className="flex min-w-0 flex-col">
           <h3 className="font-display text-[19px] font-medium tracking-tight text-ink">
-            {mode === "register" ? "Join Harbor" : "Welcome back"}
+            {mode === "register" ? t("Join Harbor") : t("Welcome back")}
           </h3>
           <p className="text-[12.5px] text-ink-subtle">
             {mode === "register"
-              ? "One free account for your handle, themes, and sync."
-              : "Sign in to pick up where you left off."}
+              ? t("One free account for your handle, themes, and sync.")
+              : t("Sign in to pick up where you left off.")}
           </p>
         </div>
       </div>
@@ -99,7 +101,7 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
                 mode === m.id ? "bg-ink text-canvas" : "text-ink-muted hover:text-ink"
               }`}
             >
-              {m.label}
+              {t(m.label)}
             </button>
           ))}
         </div>
@@ -112,20 +114,20 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
           className="flex flex-col gap-4"
         >
           <TextField
-            label="Username"
+            label={t("Username")}
             value={username}
             onChange={setUsername}
-            placeholder="yourname"
+            placeholder={t("yourname")}
             maxLength={24}
             hint={usernameHint}
             tone={usernameHint ? "danger" : "muted"}
             autoComplete="username"
           />
           <PasswordField
-            label="Password"
+            label={t("Password")}
             value={password}
             onChange={setPassword}
-            placeholder={mode === "register" ? "At least 8 characters" : "Your password"}
+            placeholder={mode === "register" ? t("At least 8 characters") : t("Your password")}
             onEnter={submit}
           />
 
@@ -138,7 +140,7 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
               }}
               className="-mt-1 self-end text-[12px] font-medium text-ink-subtle transition-colors hover:text-ink"
             >
-              Forgot password?
+              {t("Forgot password?")}
             </button>
           )}
 
@@ -154,13 +156,13 @@ export function AccountAuthForm({ onRecovery }: { onRecovery?: (code: string) =>
             className="flex h-11 items-center justify-center gap-2 rounded-[11px] bg-ink text-[14px] font-semibold text-canvas transition-all duration-150 hover:opacity-90 active:scale-[0.99] disabled:opacity-40 disabled:active:scale-100"
           >
             {busy && <Loader2 size={16} className="animate-spin" />}
-            {active.action}
+            {t(active.action)}
           </button>
 
           {mode === "register" && (
             <p className="flex items-start gap-2 text-[11.5px] leading-snug text-ink-subtle">
               <KeyRound size={13} className="mt-0.5 shrink-0" />
-              We'll show a one-time recovery key right after you sign up. Save it: it's the only way back in if you forget your password.
+              {t("We'll show a one-time recovery key right after you sign up. Save it: it's the only way back in if you forget your password.")}
             </p>
           )}
         </form>

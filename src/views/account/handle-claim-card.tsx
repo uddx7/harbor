@@ -6,18 +6,19 @@ import type { Author } from "@/lib/theme-auth";
 import { inputClass } from "./fields";
 import { useHandleAvailability, type HandleStatus } from "./use-handle-availability";
 import { HandleChangeConfirm } from "./handle-change-confirm";
+import { useT } from "@/lib/i18n";
 
-const COOLDOWN_LABEL = "once every 14 days";
-
-function formatDate(ms: number): string {
+function formatDate(ms: number, t: ReturnType<typeof useT>): string {
   try {
     return new Date(ms).toLocaleDateString(undefined, { month: "long", day: "numeric" });
   } catch {
-    return "soon";
+    return t("soon");
   }
 }
 
 export function HandleClaimCard({ author }: { author: Author }) {
+  const t = useT();
+  const COOLDOWN_LABEL = t("once every 14 days");
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +62,10 @@ export function HandleClaimCard({ author }: { author: Author }) {
           <div className="flex min-w-0 flex-col">
             <span className="font-display text-[15px] text-ink">@{author.handle}</span>
             <span className="text-[12px] text-ink-subtle">
-              Locked until {formatDate(availableAt)}. You can change your handle {COOLDOWN_LABEL}.
+              {t("Locked until {date}. You can change your handle {cooldown}.", {
+                date: formatDate(availableAt, t),
+                cooldown: COOLDOWN_LABEL,
+              })}
             </span>
           </div>
         </div>
@@ -83,7 +87,7 @@ export function HandleClaimCard({ author }: { author: Author }) {
             setValue(e.target.value);
             setError(null);
           }}
-          placeholder={hasCustom ? author.handle ?? "yourhandle" : "yourhandle"}
+          placeholder={hasCustom ? author.handle ?? t("yourhandle") : t("yourhandle")}
           maxLength={24}
           autoComplete="off"
           autoCapitalize="off"
@@ -98,7 +102,7 @@ export function HandleClaimCard({ author }: { author: Author }) {
             disabled={!canClaim}
             className="flex h-8 items-center rounded-lg bg-ink px-3 text-[12.5px] font-semibold text-canvas transition-all duration-150 hover:opacity-90 active:scale-[0.98] disabled:opacity-35 disabled:active:scale-100"
           >
-            {busy ? <Loader2 size={14} className="animate-spin" /> : hasCustom ? "Change" : "Claim"}
+            {busy ? <Loader2 size={14} className="animate-spin" /> : hasCustom ? t("Change") : t("Claim")}
           </button>
         </div>
       </div>
@@ -106,8 +110,8 @@ export function HandleClaimCard({ author }: { author: Author }) {
       <StatusLine status={status} onPick={startClaim} />
       <p className="text-[11.5px] text-ink-subtle">
         {hasCustom
-          ? `You can change your handle ${COOLDOWN_LABEL}, so pick one you'll keep.`
-          : `You can change your handle ${COOLDOWN_LABEL} after you claim it.`}
+          ? t("You can change your handle {cooldown}, so pick one you'll keep.", { cooldown: COOLDOWN_LABEL })
+          : t("You can change your handle {cooldown} after you claim it.", { cooldown: COOLDOWN_LABEL })}
       </p>
       {error && <p className="text-[12px] text-danger">{error}</p>}
 
@@ -125,11 +129,12 @@ export function HandleClaimCard({ author }: { author: Author }) {
 }
 
 function HandleHeader({ hasCustom }: { hasCustom: boolean }) {
+  const t = useT();
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-[13px] font-semibold text-ink">Handle</span>
+      <span className="text-[13px] font-semibold text-ink">{t("Handle")}</span>
       <span className="text-[12px] text-ink-subtle">
-        {hasCustom ? "How people find you across Harbor." : "Claim one so people can find you across Harbor."}
+        {hasCustom ? t("How people find you across Harbor.") : t("Claim one so people can find you across Harbor.")}
       </span>
     </div>
   );
@@ -145,19 +150,20 @@ function StatusIcon({ status }: { status: HandleStatus }) {
 }
 
 function StatusLine({ status, onPick }: { status: HandleStatus; onPick: (s: string) => void }) {
+  const t = useT();
   if (status.state === "idle") return null;
-  if (status.state === "checking") return <span className="text-[11.5px] text-ink-subtle">Checking availability</span>;
+  if (status.state === "checking") return <span className="text-[11.5px] text-ink-subtle">{t("Checking availability")}</span>;
   if (status.state === "available")
-    return <span className="text-[11.5px] font-medium text-accent">That handle is yours to claim.</span>;
+    return <span className="text-[11.5px] font-medium text-accent">{t("That handle is yours to claim.")}</span>;
   if (status.state === "error")
-    return <span className="text-[11.5px] text-ink-subtle">Sign in to Harbor to check availability.</span>;
+    return <span className="text-[11.5px] text-ink-subtle">{t("Sign in to Harbor to check availability.")}</span>;
 
   const label =
     status.state === "taken"
-      ? status.reason ?? "That handle is taken."
+      ? status.reason ?? t("That handle is taken.")
       : status.state === "reserved"
-        ? status.reason ?? "That handle is reserved."
-        : status.reason ?? "That handle is not valid.";
+        ? status.reason ?? t("That handle is reserved.")
+        : status.reason ?? t("That handle is not valid.");
   const suggestions = "suggestions" in status ? status.suggestions ?? [] : [];
 
   return (

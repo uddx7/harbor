@@ -7,6 +7,7 @@ import {
   type PanelId,
   type PlayerChromeConfig,
 } from "@/lib/player-chrome";
+import { useT } from "@/lib/i18n";
 
 type Props = {
   config: PlayerChromeConfig;
@@ -137,6 +138,7 @@ function AvatarDockBody() {
 }
 
 function EpisodesTabBody({ side }: { side: "left" | "right" }) {
+  const t = useT();
   return (
     <div
       className={`pointer-events-none flex h-32 flex-col items-center justify-center gap-2.5 bg-canvas/90 text-ink ring-1 ring-edge-soft shadow-[0_10px_32px_-10px_rgba(0,0,0,0.6)] ${
@@ -156,7 +158,7 @@ function EpisodesTabBody({ side }: { side: "left" | "right" }) {
         className="text-[11px] font-semibold uppercase tracking-[0.28em]"
         style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
       >
-        Up Next
+        {t("Up Next")}
       </span>
     </div>
   );
