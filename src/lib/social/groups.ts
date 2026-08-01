@@ -1,8 +1,7 @@
 import { socialGet, socialPost, socialPatch } from "./client";
 import { authToken } from "@/lib/theme-auth";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
-const API = `${HARBOR_API_BASE}/themes/api`;
+const API = "https://harbor.site/themes/api";
 
 export type GroupRole = "owner" | "admin" | "manager" | "member";
 
@@ -71,7 +70,7 @@ export type GroupDetail = Group &
 
 export function groupPerms(d: GroupDetail): GroupPerms {
   if (d.can) return d.can;
-  const role: GroupRole = d.isOwner ? "owner" : (d.myRole ?? (d.isMember ? "member" : "member"));
+  const role: GroupRole = d.isOwner ? "owner" : d.myRole ?? (d.isMember ? "member" : "member");
   const r = ROLE_RANK[role];
   return {
     invite: r >= ROLE_RANK.manager,
@@ -85,7 +84,7 @@ export function groupPerms(d: GroupDetail): GroupPerms {
 }
 
 export function myGroupRole(d: GroupDetail): GroupRole {
-  return d.isOwner ? "owner" : (d.myRole ?? "member");
+  return d.isOwner ? "owner" : d.myRole ?? "member";
 }
 
 export function setMemberRole(id: string, userId: string, role: GroupRole): Promise<GroupDetail> {
@@ -95,12 +94,7 @@ export function setMemberRole(id: string, userId: string, role: GroupRole): Prom
   );
 }
 
-export type DiscoverGroups = {
-  groups: Group[];
-  topTags: string[];
-  nextCursor?: string;
-  total: number;
-};
+export type DiscoverGroups = { groups: Group[]; topTags: string[]; nextCursor?: string; total: number };
 
 export function createGroup(
   name: string,
@@ -139,14 +133,11 @@ export function fetchPublicGroups(
 
 export function fetchGroupInvites(signal?: AbortSignal): Promise<Group[]> {
   return socialGet<{ groups?: Group[] } | Group[]>("/social/groups/invites", signal).then((d) =>
-    Array.isArray(d) ? d : (d.groups ?? []),
+    Array.isArray(d) ? d : d.groups ?? [],
   );
 }
 
-export function respondToInvite(
-  id: string,
-  accept: boolean,
-): Promise<GroupDetail | { ok: boolean }> {
+export function respondToInvite(id: string, accept: boolean): Promise<GroupDetail | { ok: boolean }> {
   return socialPost<GroupDetail | { ok: boolean }>(
     `/social/groups/${encodeURIComponent(id)}/respond`,
     { accept },
@@ -155,7 +146,7 @@ export function respondToInvite(
 
 export function fetchMyGroups(signal?: AbortSignal): Promise<Group[]> {
   return socialGet<{ groups?: Group[] } | Group[]>("/social/groups/mine", signal).then((d) =>
-    Array.isArray(d) ? d : (d.groups ?? []),
+    Array.isArray(d) ? d : d.groups ?? [],
   );
 }
 

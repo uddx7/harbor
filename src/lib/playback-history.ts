@@ -200,7 +200,6 @@ export function readLastSeriesPlayback(metaId: string): PlaybackEntry | null {
 
 export function streamMatchesSource(
   s: {
-    infoHash?: string | null;
     addonId?: string | null;
     resolution?: string | null;
     source?: string | null;
@@ -208,12 +207,12 @@ export function streamMatchesSource(
   },
   e: PlaybackEntry,
 ): boolean {
-  if (e.infoHash && s.infoHash) {
-    return s.infoHash.toLowerCase() === e.infoHash.toLowerCase();
-  }
   const sBinge = s.behaviorHints?.bingeGroup ?? null;
-  if (e.bingeGroup && sBinge) return sBinge === e.bingeGroup;
-  return (
-    !!e.addonId && s.addonId === e.addonId && e.resolution === s.resolution && e.source === s.source
+  if (e.bingeGroup && sBinge) return sBinge === e.bingeGroup;    
+  return (                                                       
+    !!e.addonId &&
+    s.addonId === e.addonId &&
+    e.resolution === s.resolution &&
+    e.source === s.source
   );
 }

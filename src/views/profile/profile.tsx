@@ -13,11 +13,7 @@ import { ProfileCardControls } from "./profile-card-controls";
 import { useT } from "@/lib/i18n";
 import { useMangaProgressList } from "@/lib/manga-progress";
 import { useWatchedCount } from "@/lib/playback-history";
-import {
-  pushStats,
-  useLibraryWatchedBreakdown,
-  useLibraryWatchedCount,
-} from "@/lib/social/stats-sync";
+import { pushStats, useLibraryWatchedBreakdown, useLibraryWatchedCount } from "@/lib/social/stats-sync";
 import { useProfiles } from "@/lib/profiles";
 import { useSettings } from "@/lib/settings";
 import { currentAuthor } from "@/lib/theme-auth";
@@ -30,16 +26,12 @@ import { FriendsPanel } from "./friends-panel";
 import { GroupsPanel } from "./groups-panel";
 import { SocialsPanel } from "./socials-panel";
 import { AboutCard } from "./about-card";
-import { FavoritesCard } from "./favorites-card";
-import { FavoritesPicker } from "./favorites-picker";
-import type { FavoriteKind } from "./use-favorites";
 import { RatingsCard } from "./ratings-card";
 import { UserRatings } from "@/views/ratings/user-ratings";
 import { ImportModal } from "@/views/ratings/import/import-modal";
 import { WatchNowCard } from "./watch-now-card";
 import { ProfileAudioCard } from "./profile-audio-card";
 import { MinecraftCard } from "./minecraft-card";
-import { SimklCard } from "./simkl-card";
 import { ProfileHero } from "./profile-hero";
 import { ProfileSettings } from "./profile-settings";
 import { ScrollToTop } from "./scroll-to-top";
@@ -72,7 +64,6 @@ export function ProfileView({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editing, setEditing] = useState(false);
   const [pickingLists, setPickingLists] = useState(false);
-  const [pickingFav, setPickingFav] = useState<FavoriteKind | null>(null);
   const [expanded, setExpanded] = useState<null | "lists" | "badges" | "activity">(null);
   const [showRatings, setShowRatings] = useState(false);
   const [importingRatings, setImportingRatings] = useState(false);
@@ -118,34 +109,22 @@ export function ProfileView({
       episodes > 0 ? episodes : null,
       minutes > 0 ? minutes : null,
     );
-  }, [
-    isOwner,
-    libWatched,
-    watchedCount,
-    mangaProgress.length,
-    cloudWatched,
-    cloudManga,
-    cloudMovies,
-    cloudEpisodes,
-    cloudMinutes,
-    watchedBreakdown,
-  ]);
+  }, [isOwner, libWatched, watchedCount, mangaProgress.length, cloudWatched, cloudManga, cloudMovies, cloudEpisodes, cloudMinutes, watchedBreakdown]);
 
   useEffect(() => {
     if (isOwner && consumeProfileEditIntent(handle)) setEditing(true);
   }, [isOwner, handle]);
 
   useEffect(() => {
-    if (!editing && !arranging && !pickingLists && !pickingFav && expanded == null) return;
+    if (!editing && !arranging && !pickingLists && expanded == null) return;
     return pushBackHandler(() => {
-      if (pickingFav) return (setPickingFav(null), true);
-      if (pickingLists) return (setPickingLists(false), true);
-      if (expanded != null) return (setExpanded(null), true);
-      if (arranging) return (setArranging(false), true);
-      if (editing) return (setEditing(false), true);
+      if (pickingLists) return setPickingLists(false), true;
+      if (expanded != null) return setExpanded(null), true;
+      if (arranging) return setArranging(false), true;
+      if (editing) return setEditing(false), true;
       return false;
     });
-  }, [editing, arranging, pickingLists, pickingFav, expanded]);
+  }, [editing, arranging, pickingLists, expanded]);
 
   if (state === "loading") return <ProfileSkeleton />;
   if (state === "error") return <ProfileError onRetry={reload} onBack={goBack} />;
@@ -153,15 +132,9 @@ export function ProfileView({
 
   const locked = summary.private && !summary.isOwner;
   const ownerAvatar = summary.isOwner
-    ? activeProfile?.avatar ||
-      settings.harborAvatar ||
-      user?.avatar ||
-      currentAuthor()?.avatar ||
-      undefined
+    ? activeProfile?.avatar || settings.harborAvatar || user?.avatar || currentAuthor()?.avatar || undefined
     : undefined;
-  const heroAvatar = summary.isOwner
-    ? ownerAvatar || summary.avatarUrl
-    : summary.avatarUrl || undefined;
+  const heroAvatar = summary.isOwner ? ownerAvatar || summary.avatarUrl : summary.avatarUrl || undefined;
   const heroAvatarFallback = summary.isOwner ? summary.avatarUrl || undefined : undefined;
   const mangaReadCount = summary.isOwner ? mangaProgress.length : undefined;
 
@@ -209,21 +182,10 @@ export function ProfileView({
       />
     ),
     canvas: c.hasCanvas ? (
-      <CanvasCard
-        html={c.html}
-        css={c.css}
-        height={c.height}
-        hiddenFromVisitors={c.hiddenFromVisitors}
-        hideTitle={c.hideCardTitles}
-      />
+      <CanvasCard html={c.html} css={c.css} height={c.height} hiddenFromVisitors={c.hiddenFromVisitors} hideTitle={c.hideCardTitles} />
     ) : undefined,
     showcase: (
-      <Showcase
-        item={summary.showcase}
-        onOpen={onOpenMeta}
-        isOwner={summary.isOwner}
-        onCleared={patchSummary}
-      />
+      <Showcase item={summary.showcase} onOpen={onOpenMeta} isOwner={summary.isOwner} onCleared={patchSummary} />
     ),
     lists: (
       <MyListsShowcase
@@ -236,36 +198,6 @@ export function ProfileView({
         handle={handle}
       />
     ),
-    favgames:
-      summary.isOwner || (summary.favorites?.game?.length ?? 0) > 0 ? (
-        <FavoritesCard
-          kind="game"
-          items={summary.favorites?.game ?? []}
-          isOwner={summary.isOwner}
-          hideTitle={c.hideCardTitles}
-          onManage={() => setPickingFav("game")}
-        />
-      ) : undefined,
-    favbooks:
-      summary.isOwner || (summary.favorites?.book?.length ?? 0) > 0 ? (
-        <FavoritesCard
-          kind="book"
-          items={summary.favorites?.book ?? []}
-          isOwner={summary.isOwner}
-          hideTitle={c.hideCardTitles}
-          onManage={() => setPickingFav("book")}
-        />
-      ) : undefined,
-    favmusic:
-      summary.isOwner || (summary.favorites?.music?.length ?? 0) > 0 ? (
-        <FavoritesCard
-          kind="music"
-          items={summary.favorites?.music ?? []}
-          isOwner={summary.isOwner}
-          hideTitle={c.hideCardTitles}
-          onManage={() => setPickingFav("music")}
-        />
-      ) : undefined,
     badges: <BadgesRow badges={badges} onViewAll={() => setExpanded("badges")} handle={handle} />,
     activity: (
       <RecentActivity
@@ -278,12 +210,7 @@ export function ProfileView({
       />
     ),
     comments: (
-      <CommentsSection
-        handle={handle}
-        isOwner={summary.isOwner}
-        signedIn={viewerSignedIn}
-        onOpenAuthor={onOpenProfile}
-      />
+      <CommentsSection handle={handle} isOwner={summary.isOwner} signedIn={viewerSignedIn} onOpenAuthor={onOpenProfile} />
     ),
   };
   const presentCards = CARD_ORDER_DEFAULT.filter((k) => cardNodes[k] != null);
@@ -295,19 +222,9 @@ export function ProfileView({
         counts: {
           ...summary.counts,
           watched: Math.max(summary.counts.watched ?? 0, watchedBreakdown.watched),
-          moviesWatched: Math.max(
-            summary.counts.moviesWatched ?? 0,
-            watchedBreakdown.moviesWatched,
-          ),
-          episodesWatched: Math.max(
-            summary.counts.episodesWatched ?? 0,
-            watchedBreakdown.episodesWatched,
-          ),
-          minutesWatched: Math.max(
-            summary.counts.minutesWatched ?? 0,
-            watchedBreakdown.minutesWatched,
-            (summary.counts.hoursWatched ?? 0) * 60,
-          ),
+          moviesWatched: Math.max(summary.counts.moviesWatched ?? 0, watchedBreakdown.moviesWatched),
+          episodesWatched: Math.max(summary.counts.episodesWatched ?? 0, watchedBreakdown.episodesWatched),
+          minutesWatched: Math.max(summary.counts.minutesWatched ?? 0, watchedBreakdown.minutesWatched, (summary.counts.hoursWatched ?? 0) * 60),
         },
       }
     : summary;
@@ -358,9 +275,7 @@ export function ProfileView({
                         index={i}
                         total={orderedCards.length}
                         hidden={isHidden}
-                        onMove={(dir) =>
-                          applyLayout(moveCard(orderedCards, k, dir), [...hiddenSet])
-                        }
+                        onMove={(dir) => applyLayout(moveCard(orderedCards, k, dir), [...hiddenSet])}
                         onToggleHide={() => {
                           const h = new Set(hiddenSet);
                           if (h.has(k)) h.delete(k);
@@ -376,29 +291,11 @@ export function ProfileView({
             </div>
             <aside className="space-y-6 lg:sticky lg:top-24 lg:self-start">
               <ProfileAudioCard audioUrl={summary.audioUrl} />
-              <MinecraftCard
-                name={summary.minecraftName}
-                background={summary.minecraftBg}
-                hideTitle={c.hideCardTitles}
-              />
+              <MinecraftCard name={summary.minecraftName} background={summary.minecraftBg} hideTitle={c.hideCardTitles} />
               <WatchNowCard watching={summary.watching} />
-              {summary.isOwner && settings.showSimklCard ? (
-                <SimklCard isOwner hideTitle={c.hideCardTitles} published={summary.simkl} />
-              ) : !summary.isOwner && summary.simkl ? (
-                <SimklCard isOwner={false} hideTitle={c.hideCardTitles} published={summary.simkl} />
-              ) : null}
-              <FriendsPanel
-                friends={friends}
-                onOpen={onOpenProfile}
-                isOwner={summary.isOwner}
-                total={summary.counts.friends}
-              />
+              <FriendsPanel friends={friends} onOpen={onOpenProfile} isOwner={summary.isOwner} total={summary.counts.friends} />
               <GroupsPanel isOwner={summary.isOwner} handle={handle} />
-              <SocialsPanel
-                socials={summary.socials}
-                isOwner={summary.isOwner}
-                onSaved={patchSummary}
-              />
+              <SocialsPanel socials={summary.socials} isOwner={summary.isOwner} onSaved={patchSummary} />
             </aside>
           </div>
         )}
@@ -421,18 +318,6 @@ export function ProfileView({
               setPickingLists(false);
               reload();
             }}
-          />
-        )}
-        {pickingFav && (
-          <FavoritesPicker
-            kind={pickingFav}
-            initial={{
-              game: summary.favorites?.game ?? [],
-              book: summary.favorites?.book ?? [],
-              music: summary.favorites?.music ?? [],
-            }}
-            onClose={() => setPickingFav(null)}
-            onSaved={patchSummary}
           />
         )}
         {showRatings && (

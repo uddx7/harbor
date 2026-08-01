@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { safeFetch } from "@/lib/safe-fetch";
 import { authToken } from "@/lib/theme-auth";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
 export type PresenceStatus = "online" | "away" | "dnd" | "offline";
 
@@ -11,25 +10,10 @@ export const PRESENCE_META: Record<
   PresenceStatus,
   { label: string; help: string; dot: string; text: string }
 > = {
-  online: {
-    label: "Online",
-    help: "Active and reachable",
-    dot: "bg-success",
-    text: "text-success",
-  },
+  online: { label: "Online", help: "Active and reachable", dot: "bg-success", text: "text-success" },
   away: { label: "Away", help: "Idle for now", dot: "bg-accent", text: "text-accent" },
-  dnd: {
-    label: "Do not disturb",
-    help: "Silence notifications",
-    dot: "bg-danger",
-    text: "text-danger",
-  },
-  offline: {
-    label: "Appear offline",
-    help: "Look offline to others",
-    dot: "bg-ink-subtle",
-    text: "text-ink-subtle",
-  },
+  dnd: { label: "Do not disturb", help: "Silence notifications", dot: "bg-danger", text: "text-danger" },
+  offline: { label: "Appear offline", help: "Look offline to others", dot: "bg-ink-subtle", text: "text-ink-subtle" },
 };
 
 const KEY = "harbor.presence.status";
@@ -61,7 +45,7 @@ export function subscribeStatus(fn: () => void): () => void {
 async function savePresence(next: PresenceStatus): Promise<void> {
   const token = authToken();
   if (!token) return;
-  await safeFetch(`${HARBOR_API_BASE}/themes/api/social/me/profile`, {
+  await safeFetch("https://harbor.site/themes/api/social/me/profile", {
     method: "PATCH",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
     body: JSON.stringify({ presence: next }),

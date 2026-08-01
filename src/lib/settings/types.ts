@@ -393,7 +393,6 @@ export type Settings = {
   hideUnreleased: boolean;
   localEpisodeSortDesc: boolean;
   smoothScroll: boolean;
-  showSimklCard: boolean;
   showPlaylistsTab: boolean;
   skipProfileScreen: boolean;
   profilePromptInterval: "launch" | "15m" | "30m" | "never";

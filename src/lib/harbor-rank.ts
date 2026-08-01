@@ -1,15 +1,7 @@
 import type { KnownForEntry } from "./rankings";
 import { safeFetch } from "./safe-fetch";
-import { HARBOR_API_BASE } from "./config/endpoints";
 
-export type RankSource =
-  | "harbor"
-  | "trending"
-  | "rising"
-  | "contenders"
-  | "tmdb"
-  | "imdb"
-  | "consensus";
+export type RankSource = "harbor" | "trending" | "rising" | "contenders" | "tmdb" | "imdb" | "consensus";
 
 export type PeopleDept = "Acting" | "Directing" | "Production" | "Writing";
 
@@ -102,7 +94,7 @@ export const HARBOR_RANK_WEIGHTS: ScoreComponents = {
   roles: 0.12,
 };
 
-const FEED_BASE = `${HARBOR_API_BASE}/rank`;
+const FEED_BASE = "https://harbor.site/rank";
 const STALE_MS = 6 * 60 * 60 * 1000;
 const MANIFEST_KEY = "harbor.rank.manifest.v1";
 
@@ -213,10 +205,7 @@ export async function fetchRankList(
       if (!result) return null;
       listMem.set(key, { at: Date.now(), result });
       try {
-        localStorage.setItem(
-          snapshotKey(source, dept, country),
-          JSON.stringify({ at: Date.now(), result }),
-        );
+        localStorage.setItem(snapshotKey(source, dept, country), JSON.stringify({ at: Date.now(), result }));
       } catch {
         // ignore
       }

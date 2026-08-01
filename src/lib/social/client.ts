@@ -1,7 +1,6 @@
 import { authToken, refreshToken } from "@/lib/theme-auth";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
-const API = `${HARBOR_API_BASE}/themes/api`;
+const API = "https://harbor.site/themes/api";
 
 function headers(hasBody: boolean): Record<string, string> {
   const h: Record<string, string> = {};

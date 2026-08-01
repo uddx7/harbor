@@ -331,7 +331,7 @@ export function usePickHandler({
       engineP2pEligible(stream) &&
       (hasUncachedMarker(stream) || (!stream.url && debrids.length === 0))
     ) {
-      setP2pConfirm({ stream, forceP2p: true });
+      setP2pConfirm({ stream });
       return;
     }
     startResolve(stream, committed);

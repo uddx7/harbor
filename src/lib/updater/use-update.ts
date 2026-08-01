@@ -1,6 +1,5 @@
 import { useSyncExternalStore } from "react";
 import { check } from "@tauri-apps/plugin-updater";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
 const IS_TAURI = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 const DISMISS_KEY = "harbor.update.dismissed";
@@ -99,7 +98,7 @@ async function runningPrerelease(): Promise<boolean> {
   try {
     const [{ getVersion }, res] = await Promise.all([
       import("@tauri-apps/api/app"),
-      fetch(`${HARBOR_API_BASE}/updates/latest.json`, { cache: "no-store" }),
+      fetch("https://harbor.site/updates/latest.json", { cache: "no-store" }),
     ]);
     if (!res.ok) return false;
     const stable = (await res.json()) as { version?: string };
@@ -122,11 +121,7 @@ function betaChannel(): boolean {
 
 export async function checkForUpdate(manual = false): Promise<void> {
   if (!IS_TAURI) return;
-  if (
-    state.status === "checking" ||
-    state.status === "downloading" ||
-    state.status === "installing"
-  ) {
+  if (state.status === "checking" || state.status === "downloading" || state.status === "installing") {
     return;
   }
   set({ status: "checking", manualCheck: manual, error: null });
@@ -182,10 +177,7 @@ export async function installUpdate(): Promise<void> {
   set({ status: "installing", error: null, installFailed: false });
   try {
     try {
-      localStorage.setItem(
-        PENDING_KEY,
-        JSON.stringify({ version: handle.version, at: Date.now() }),
-      );
+      localStorage.setItem(PENDING_KEY, JSON.stringify({ version: handle.version, at: Date.now() }));
     } catch {
       /* private mode: we just lose next-launch failure detection */
     }
@@ -217,12 +209,12 @@ function cmpVersion(a: string, b: string): number {
 
 export async function openManualDownload(): Promise<void> {
   const { openUrl } = await import("@/lib/window");
-  let target = HARBOR_API_BASE;
+  let target = "https://harbor.site";
   try {
     const { safeFetch } = await import("@/lib/safe-fetch");
     const beta = betaChannel() || (await runningPrerelease());
     const res = await safeFetch(
-      `${HARBOR_API_BASE}/updates/latest.json`,
+      "https://harbor.site/updates/latest.json",
       beta ? BETA_HEADERS : undefined,
     );
     const manifest = (await res.json()) as { platforms?: Record<string, { url?: string }> };
@@ -230,8 +222,7 @@ export async function openManualDownload(): Promise<void> {
     const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
     const want = ua.includes("Windows") ? "windows" : ua.includes("Mac") ? "darwin" : "linux";
     const key =
-      Object.keys(platforms).find((k) => k.toLowerCase().startsWith(want)) ??
-      Object.keys(platforms)[0];
+      Object.keys(platforms).find((k) => k.toLowerCase().startsWith(want)) ?? Object.keys(platforms)[0];
     const url = key ? platforms[key]?.url : undefined;
     if (typeof url === "string" && url) {
       target = url.endsWith(".app.tar.gz") ? `${url.slice(0, -".app.tar.gz".length)}.dmg` : url;

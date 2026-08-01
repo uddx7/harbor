@@ -1,5 +1,4 @@
 import { normalizeRoomCode } from "./protocol";
-import { HARBOR_RELAY_BASE } from "@/lib/config/endpoints";
 
 const RELAY_PARAM = "harbor-relay";
 const ROOM_PARAM = "harbor-room";
@@ -9,7 +8,7 @@ export type ParsedInvite = {
   roomCode: string;
 };
 
-export const WEB_JOIN_BASE = HARBOR_RELAY_BASE;
+export const WEB_JOIN_BASE = "https://app.harbor.site";
 
 export function buildInviteUrl(relayUrl: string, roomCode: string, origin?: string): string {
   const local =

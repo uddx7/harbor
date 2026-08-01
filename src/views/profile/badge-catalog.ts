@@ -1,6 +1,4 @@
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
-
-export const BADGE_ICON_BASE = `${HARBOR_API_BASE}/themes/api/images/badges`;
+export const BADGE_ICON_BASE = "https://harbor.site/themes/api/images/badges";
 
 export const BADGE_NAMES = [
   "addon_developer_v2",

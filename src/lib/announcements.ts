@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { safeFetch } from "@/lib/safe-fetch";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
 export type AnnouncementSection = { heading?: string; items: string[] };
 
@@ -19,7 +18,7 @@ export type Announcement = {
 
 export type AnnouncementScope = "anime" | "global";
 
-const URL = `${HARBOR_API_BASE}/announcements.json`;
+const URL = "https://harbor.site/announcements.json";
 const SEEN_KEY = "harbor.announce.seen";
 
 function isSeen(id: string): boolean {

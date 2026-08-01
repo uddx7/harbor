@@ -1,8 +1,7 @@
 import { lruSet } from "@/lib/cache";
 import { registerEvictable } from "@/lib/maintenance";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
-const BASE = `${HARBOR_API_BASE}/api/imdb`;
+const BASE = "https://harbor.site/api/imdb";
 
 export type ParentalCategory = { category: string; severity: string };
 

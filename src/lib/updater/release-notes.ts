@@ -1,5 +1,4 @@
 import { safeFetch } from "@/lib/safe-fetch";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
 export type NoteMedia = {
   src: string;
@@ -17,7 +16,7 @@ export type ReleaseNote = {
   sections?: NoteSection[];
 };
 
-const URL = `${HARBOR_API_BASE}/release-notes.json`;
+const URL = "https://harbor.site/release-notes.json";
 
 let cache: Record<string, ReleaseNote> | null = null;
 let loading: Promise<void> | null = null;

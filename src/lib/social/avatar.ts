@@ -1,8 +1,7 @@
 import { applyAvatarUrl, authToken } from "@/lib/theme-auth";
 import type { ProfileSummary } from "@/views/profile/profile-types";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
-const API = `${HARBOR_API_BASE}/themes/api`;
+const API = "https://harbor.site/themes/api";
 
 async function unwrap(r: Response): Promise<ProfileSummary> {
   const d = (await r.json().catch(() => ({}))) as { error?: string };

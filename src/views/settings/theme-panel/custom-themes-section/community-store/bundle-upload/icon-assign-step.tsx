@@ -41,15 +41,7 @@ async function expandZips(files: File[]): Promise<File[]> {
       const entries = await unzip(await f.arrayBuffer());
       for (const [name, bytes] of entries) {
         if (name.startsWith("__MACOSX") || name.includes("/.") || !/\.(png|jpe?g|webp|gif|avif|bmp)$/i.test(name)) continue;
-        const base = name.split("/").pop() ?? name;
-        const ext = (base.split(".").pop() ?? "").toLowerCase();
-        const mime =
-          ext === "jpg" || ext === "jpeg"
-            ? "image/jpeg"
-            : ext === "svg"
-              ? "image/svg+xml"
-              : `image/${ext}`;
-        out.push(new File([bytes], base, { type: mime }));
+        out.push(new File([bytes], name.split("/").pop() ?? name));
       }
     } catch {
       /* skip unreadable zip */

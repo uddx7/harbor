@@ -1,9 +1,8 @@
-import { HARBOR_BUGS_BASE } from "@/lib/config/endpoints";
-
 declare const __APP_VERSION__: string;
 
 const ENDPOINT =
-  (import.meta.env.VITE_BUG_REPORT_ENDPOINT as string | undefined) || HARBOR_BUGS_BASE;
+  (import.meta.env.VITE_BUG_REPORT_ENDPOINT as string | undefined) ||
+  "https://bugs.harbor.site";
 
 export type Severity = "low" | "normal" | "high" | "critical";
 
@@ -49,10 +48,7 @@ export function installBugReportErrorCapture() {
   if (installed || typeof window === "undefined") return;
   installed = true;
   window.addEventListener("error", (e) => {
-    push(
-      `${e.message}${e.filename ? ` (${e.filename}:${e.lineno ?? "?"})` : ""}`,
-      "window.onerror",
-    );
+    push(`${e.message}${e.filename ? ` (${e.filename}:${e.lineno ?? "?"})` : ""}`, "window.onerror");
   });
   window.addEventListener("unhandledrejection", (e) => {
     const r = e.reason as unknown;
@@ -163,7 +159,10 @@ export async function submitErrorReport(args: {
       code: args.code,
       title: args.title,
       detail: args.detail || null,
-      path: typeof window !== "undefined" ? window.location.pathname + window.location.hash : "",
+      path:
+        typeof window !== "undefined"
+          ? window.location.pathname + window.location.hash
+          : "",
       recentErrors: getRecentErrors().slice(-20),
     }),
   );

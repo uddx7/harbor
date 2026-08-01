@@ -1,5 +1,4 @@
 import { safeFetch } from "@/lib/safe-fetch";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
 export type CommunitySource = {
   id: string;
@@ -13,7 +12,7 @@ export type CommunitySource = {
   order?: number;
 };
 
-const ENDPOINT = `${HARBOR_API_BASE}/api/manga-sources`;
+const ENDPOINT = "https://harbor.site/api/manga-sources";
 const CACHE_KEY = "harbor.manga.catalog.v1";
 
 const SEED: CommunitySource[] = [];

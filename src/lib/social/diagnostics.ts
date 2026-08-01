@@ -1,8 +1,7 @@
 import { authToken } from "@/lib/theme-auth";
 import { socialGet } from "./client";
-import { HARBOR_API_BASE } from "@/lib/config/endpoints";
 
-const API = `${HARBOR_API_BASE}/themes/api`;
+const API = "https://harbor.site/themes/api";
 
 export type DiagnosticsStaff = { handle: string; name: string; role: string };
 
@@ -19,10 +18,7 @@ export function fetchDiagnosticsRequest(
   id: string,
   signal?: AbortSignal,
 ): Promise<DiagnosticsRequestSummary> {
-  return socialGet<DiagnosticsRequestSummary>(
-    `/social/me/diagnostics/${encodeURIComponent(id)}`,
-    signal,
-  );
+  return socialGet<DiagnosticsRequestSummary>(`/social/me/diagnostics/${encodeURIComponent(id)}`, signal);
 }
 
 export async function uploadDiagnosticsBundle(
