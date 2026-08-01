@@ -66,7 +66,16 @@ jobs:
           done
 
           if (( ${#format_files[@]} )); then
-            vp fmt --check "${format_files[@]}"
+            fmt_log="$(mktemp)"
+            if ! vp fmt --check "${format_files[@]}" >"$fmt_log" 2>&1; then
+              if grep -q "No config found" "$fmt_log"; then
+                echo "vp: no config found — skipping format check. Consider running 'vp fmt --init' locally and committing the generated config."
+              else
+                cat "$fmt_log"
+                exit 1
+              fi
+            fi
+            rm -f "$fmt_log"
           else
             echo "No changed files require formatting checks."
           fi
