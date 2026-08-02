@@ -1,5 +1,28 @@
 import { useSyncExternalStore } from "react";
-import { isRtl, normalizeLanguage, type UiLanguage } from "./languages";
+import { DEFAULT_LANGUAGE, LANGUAGES, isRtl, normalizeLanguage, type UiLanguage } from "./languages";
+
+function systemLanguages(): readonly string[] {
+  if (typeof navigator === "undefined") return [];
+  return navigator.languages?.length ? navigator.languages : [navigator.language];
+}
+
+export function detectUiLanguage(preferred: readonly string[] = systemLanguages()): UiLanguage {
+  for (const lang of preferred) {
+    const base = lang.trim().toLowerCase().split(/[-_]/)[0];
+    if (LANGUAGES.some((l) => l.code === base)) return base as UiLanguage;
+  }
+  return DEFAULT_LANGUAGE;
+}
+
+export function resolveUiLanguage(
+  stored: unknown,
+  preferred: readonly string[] = systemLanguages(),
+): UiLanguage {
+  if (typeof stored === "string" && LANGUAGES.some((l) => l.code === stored)) {
+    return stored as UiLanguage;
+  }
+  return detectUiLanguage(preferred);
+}
 
 function applyDocument(lang: UiLanguage) {
   if (typeof document === "undefined") return;
@@ -9,7 +32,7 @@ function applyDocument(lang: UiLanguage) {
 }
 
 function storedUiLanguage(): UiLanguage {
-  if (typeof localStorage === "undefined") return "en";
+  if (typeof localStorage === "undefined") return detectUiLanguage();
   try {
     const profileState = JSON.parse(localStorage.getItem("harbor.profiles.v1") ?? "null") as {
       activeId?: string | null;
@@ -30,7 +53,7 @@ function storedUiLanguage(): UiLanguage {
   } catch {
     /* ignore */
   }
-  return "en";
+  return detectUiLanguage();
 }
 
 let current: UiLanguage = storedUiLanguage();
