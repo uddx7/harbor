@@ -9,6 +9,8 @@ const downloads: Record<string, string> = {
   "Failed: {error}": "Falhou: {error}",
   "Interrupted: re-download to finish": "Interrompido: baixe novamente para concluir",
   "Cancel download": "Cancelar download",
+  "Pause download": "Pausar download",
+  "Resume download": "Retomar download",
   "Delete download and file": "Excluir download e arquivo",
   "Download video": "Baixar vídeo",
   "Download to disk": "Baixar para o disco",

@@ -1,4 +1,4 @@
-import { Check, LayoutGrid, Loader2, Palette } from "lucide-react";
+import { Check, Globe, LayoutGrid, Loader2, Lock, Palette, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTogether } from "@/lib/together/provider";
 import { useProfiles } from "@/lib/profiles";
@@ -16,7 +16,7 @@ import { LocationSelect } from "./location-select";
 import { CustomizationPanel } from "./customization/customization-panel";
 import { AboutEditor } from "./customization/about-editor";
 import { useCustomUrlAvailability, type UrlStatus } from "./use-customurl-availability";
-import type { Badge, ProfileSettingsInput, ProfileSummary } from "./profile-types";
+import type { Badge, FriendsVisibility, ProfileSettingsInput, ProfileSummary } from "./profile-types";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -80,6 +80,7 @@ export function ProfileSettings({
     minecraftName: summary.minecraftName ?? "",
     minecraftBg: summary.minecraftBg ?? "",
     shareActivity: summary.shareActivity ?? false,
+    friendsVisibility: summary.friendsVisibility ?? "everyone",
     private: summary.private ?? false,
   });
   const [saving, setSaving] = useState(false);
@@ -143,6 +144,12 @@ export function ProfileSettings({
   if (customizing) {
     return <CustomizationPanel summary={summary} onClose={() => setCustomizing(false)} onSaved={onSaved} />;
   }
+
+  const friendsVisibilityOpts: Array<{ id: FriendsVisibility; label: string; icon: typeof Globe }> = [
+    { id: "everyone", label: t("Everyone"), icon: Globe },
+    { id: "friends", label: t("Friends"), icon: Users },
+    { id: "only_me", label: t("Only me"), icon: Lock },
+  ];
 
   return (
     <>
@@ -360,6 +367,34 @@ export function ProfileSettings({
                   className={`block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${form.private ? "translate-x-5" : "translate-x-0"}`}
                 />
               </button>
+            </div>
+
+            <div className="rounded-[10px] bg-elevated px-3 py-2.5 ring-1 ring-edge-soft">
+              <div className="min-w-0">
+                <div className="text-[13px] font-medium text-ink">{t("Friends list")}</div>
+                <div className="text-[12px] text-ink-subtle">
+                  {t("Choose who can see the friends on your profile")}
+                </div>
+              </div>
+              <div className="mt-2.5 grid grid-cols-3 gap-2">
+                {friendsVisibilityOpts.map((o) => {
+                  const on = form.friendsVisibility === o.id;
+                  const Icon = o.icon;
+                  return (
+                    <button
+                      key={o.id}
+                      type="button"
+                      onClick={() => set("friendsVisibility", o.id)}
+                      className={`flex flex-col items-center gap-1 rounded-[10px] border p-2.5 text-center transition-colors ${
+                        on ? "border-ink bg-surface" : "border-edge-soft bg-surface/40 hover:border-edge"
+                      }`}
+                    >
+                      <Icon size={16} className={on ? "text-ink" : "text-ink-subtle"} />
+                      <span className="text-[12.5px] font-semibold text-ink">{o.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="flex items-center justify-between gap-3 rounded-[10px] bg-elevated px-3 py-2.5 ring-1 ring-edge-soft">

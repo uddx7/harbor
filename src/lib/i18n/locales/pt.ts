@@ -23,6 +23,9 @@ import addons from "./pt/addons";
 import extra from "./pt/extra";
 import manga from "./pt/manga";
 import controllers from "./pt/controllers";
+import people from "./pt/people";
+import profileCustomization from "./pt/profile-customization";
+import mobileManga from "./pt/mobile-manga";
 import used from "./pt/used";
 
 const pt: Record<string, string> = {
@@ -51,6 +54,9 @@ const pt: Record<string, string> = {
   ...extra,
   ...manga,
   ...controllers,
+  ...people,
+  ...profileCustomization,
+  ...mobileManga,
   ...used,
 };
 

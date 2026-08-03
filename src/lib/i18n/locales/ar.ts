@@ -22,6 +22,9 @@ import spotlights from "./ar/spotlights";
 import sync from "./ar/sync";
 import together from "./ar/together";
 import controllers from "./ar/controllers";
+import people from "./ar/people";
+import profileCustomization from "./ar/profile-customization";
+import mobileManga from "./ar/mobile-manga";
 
 import used from "./ar/used";
 
@@ -50,6 +53,9 @@ const ar: Record<string, string> = {
   ...awards,
   ...addons,
   ...controllers,
+  ...people,
+  ...profileCustomization,
+  ...mobileManga,
   ...used,
 };
 

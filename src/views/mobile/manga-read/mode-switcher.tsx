@@ -1,4 +1,5 @@
 import { BookOpen, Columns2, GalleryVertical, RectangleVertical, type LucideIcon } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import type { LocalMode } from "./local-reader-types";
 
 const ITEMS: { mode: LocalMode; label: string; Icon: LucideIcon }[] = [
@@ -17,6 +18,7 @@ export function ModeSwitcher({
   onPick: (m: LocalMode) => void;
   reduce: boolean;
 }) {
+  const t = useT();
   return (
     <div className="flex items-center gap-1 rounded-full bg-elevated/70 p-1 ring-1 ring-edge-soft/50 backdrop-blur-xl">
       {ITEMS.map(({ mode: m, label, Icon }) => {
@@ -25,7 +27,7 @@ export function ModeSwitcher({
           <button
             key={m}
             type="button"
-            aria-label={label}
+            aria-label={t(label)}
             aria-pressed={active}
             onClick={() => onPick(m)}
             className={`grid h-11 w-11 place-items-center rounded-full ${reduce ? "" : "transition-colors duration-150 motion-reduce:transition-none"} ${

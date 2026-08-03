@@ -1,0 +1,26 @@
+const people: Record<string, string> = {
+  "Harbor Rank": "Harbor Rank",
+  "Rising Stars": "Estrelas em Ascensão",
+  "Contenders": "Concorrentes",
+  "Top on TMDB": "Top no TMDB",
+  "Top on IMDb": "Top no IMDb",
+  "Consensus": "Consenso",
+  "Hall of Fame": "Hall da Fama",
+  "Trending now": "Em alta agora",
+  "Rising star": "Estrela em ascensão",
+  "In contention": "Na disputa",
+  "Most popular": "Mais populares",
+  "Consensus #1": "Consenso Nº1",
+  "Actors": "Atores",
+  "Actor": "Ator",
+  "Producer": "Produtor",
+  "Our all-time ranking of a body of work, fully explained.": "Nosso ranking geral de toda a carreira, totalmente explicado.",
+  "People from the week's hottest titles, weighted by what is being talked about.": "Pessoas dos títulos mais comentados da semana, ponderadas pelo que está sendo falado.",
+  "Breakout talent from this week's hottest titles, before they are household names.": "Talentos em ascensão dos títulos mais comentados da semana, antes de se tornarem nomes conhecidos.",
+  "In the running this awards season, from the latest nominations and wins.": "Na disputa nesta temporada de premiações, com base nas últimas indicações e vitórias.",
+  "Steady popularity across TMDB right now.": "Popularidade estável no TMDB agora.",
+  "Built from IMDb's public datasets. Career ratings volume.": "Construído a partir dos dados públicos do IMDb. Volume de avaliações da carreira.",
+  "A blend of the sources above by percentile. Degrades gracefully when one is missing.": "Uma combinação das fontes acima por percentil. Se ajusta bem quando uma delas está ausente.",
+};
+
+export default people;

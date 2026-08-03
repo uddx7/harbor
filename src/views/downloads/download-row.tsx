@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
-import { Check, FolderOpen, Play, Trash2, X } from "lucide-react";
+import { Check, FolderOpen, Play, Trash2 } from "lucide-react";
+import { DownloadCancelIcon, DownloadPauseResumeIcon } from "@/components/download-action-icons";
 import { Poster, usePosterChain } from "@/components/poster";
 import { useSettings } from "@/lib/settings";
 import { useView } from "@/lib/view";
 import {
   cancelDownload,
+  pauseDownload,
   removeDownload,
+  resumeDownload,
   revealDownload,
   type DownloadItem,
 } from "@/lib/download/downloads-store";
@@ -24,6 +27,7 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
   );
   const pct = Math.round(d.ratio * 100);
   const downloading = d.status === "downloading";
+  const active = downloading || d.status === "paused";
   const playLocal = () =>
     openPlayer({
       meta: {
@@ -57,7 +61,7 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
             <span className="shrink-0 truncate text-[12px] text-ink-subtle">{d.subtitle}</span>
           )}
         </div>
-        {downloading ? (
+        {active ? (
           <>
             <div className="h-1.5 w-full overflow-hidden rounded-full bg-ink/10">
               <div
@@ -66,7 +70,7 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
               />
             </div>
             <div className="flex flex-wrap items-center gap-x-2 text-[11.5px] tabular-nums text-ink-muted">
-              <span>{pct}%</span>
+              <span>{d.status === "paused" ? "Paused" : `${pct}%`}</span>
               {d.totalBytes != null && (
                 <span className="text-ink-subtle">
                   {fmtBytes(d.receivedBytes)} / {fmtBytes(d.totalBytes)}
@@ -98,11 +102,23 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
         )}
       </div>
       <div className="flex shrink-0 items-center gap-1">
-        {downloading ? (
-          <RowBtn label={t("Cancel download")} onClick={() => cancelDownload(d.id)}>
-            <X size={16} strokeWidth={2.2} />
-          </RowBtn>
-        ) : (
+        {active && (
+          <>
+            <RowBtn
+              label={d.status === "paused" ? t("Resume download") : t("Pause download")}
+              onClick={() => {
+                if (d.status === "paused") void resumeDownload(d.id);
+                else pauseDownload(d.id);
+              }}
+            >
+              <DownloadPauseResumeIcon paused={d.status === "paused"} size={16} />
+            </RowBtn>
+            <RowBtn label={t("Cancel download")} onClick={() => cancelDownload(d.id)} cancel>
+              <DownloadCancelIcon size={16} />
+            </RowBtn>
+          </>
+        )}
+        {!active && (
           <>
             {d.status === "done" && (
               <>
@@ -114,9 +130,7 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
                 </RowBtn>
               </>
             )}
-            <RowBtn label={t("Delete download and file")} onClick={() => removeDownload(d.id)}>
-              <Trash2 size={16} strokeWidth={2} />
-            </RowBtn>
+            <DeleteButton onClick={() => removeDownload(d.id)} />
           </>
         )}
       </div>
@@ -124,14 +138,44 @@ export function DownloadRow({ d, compact = false }: { d: DownloadItem; compact?:
   );
 }
 
-function RowBtn({ label, onClick, children }: { label: string; onClick: () => void; children: ReactNode }) {
+function DeleteButton({ onClick }: { onClick: () => void }) {
+  const t = useT();
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={t("Delete download and file")}
+      title={t("Delete download and file")}
+      className="download-delete-trigger flex h-9 items-center justify-center gap-2.5 rounded-full border border-danger/10 bg-danger/5 px-4 text-[13px] font-medium tracking-tight text-danger transition-[transform,background-color] duration-150 ease-out hover:scale-[1.02] hover:bg-danger/10 active:scale-[0.96] motion-reduce:transition-none"
+    >
+      <Trash2 size={16} strokeWidth={2} className="download-delete-icon shrink-0" />
+      <span>{t("Delete")}</span>
+    </button>
+  );
+}
+
+function RowBtn({
+  label,
+  onClick,
+  cancel = false,
+  children,
+}: {
+  label: string;
+  onClick: () => void;
+  cancel?: boolean;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="flex h-9 w-9 items-center justify-center rounded-lg text-ink-subtle transition duration-150 hover:bg-ink/10 hover:text-ink active:scale-90"
+      className={`flex h-9 w-9 items-center justify-center rounded-lg transition-[color,background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${
+        cancel
+          ? "download-cancel-trigger text-ink-subtle hover:bg-danger/10 hover:text-danger"
+          : "text-ink-subtle hover:bg-ink/10 hover:text-ink"
+      }`}
     >
       {children}
     </button>

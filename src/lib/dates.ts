@@ -1,3 +1,5 @@
+import { t } from "@/lib/i18n";
+
 export function formatAirDate(value: string | null | undefined): string {
   if (!value) return "";
   const trimmed = value.length === 10 ? `${value}T00:00:00Z` : value;
@@ -26,18 +28,18 @@ export function formatAirDateShort(value: string | null | undefined): string {
 export function relativeTime(ts: number | null | undefined): string {
   if (!ts) return "";
   const sec = Math.round((Date.now() - ts) / 1000);
-  if (sec < 45) return "just now";
+  if (sec < 45) return t("just now");
   const min = Math.round(sec / 60);
-  if (min < 60) return `${min}m ago`;
+  if (min < 60) return t("{n}m ago", { n: min });
   const hr = Math.round(min / 60);
-  if (hr < 24) return `${hr}h ago`;
+  if (hr < 24) return t("{n}h ago", { n: hr });
   const day = Math.round(hr / 24);
-  if (day < 7) return `${day}d ago`;
+  if (day < 7) return t("{n}d ago", { n: day });
   const wk = Math.round(day / 7);
-  if (wk < 5) return `${wk}w ago`;
+  if (wk < 5) return t("{n}w ago", { n: wk });
   const mo = Math.round(day / 30);
-  if (mo < 12) return `${mo}mo ago`;
-  return `${Math.round(day / 365)}y ago`;
+  if (mo < 12) return t("{n}mo ago", { n: mo });
+  return t("{n}y ago", { n: Math.round(day / 365) });
 }
 
 const DAY_MS = 86400000;

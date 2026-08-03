@@ -14,6 +14,7 @@ import {
   Underline,
   Youtube,
 } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { renderBbcode } from "@/lib/social/bbcode";
 import { EmbedPrompt, type EmbedKind } from "@/components/embed-prompt";
 
@@ -43,6 +44,7 @@ const TOOLS: Tool[] = [
 ];
 
 export function AboutEditor({ value, onChange }: { value: string; onChange: (next: string) => void }) {
+  const t = useT();
   const ref = useRef<HTMLTextAreaElement>(null);
   const [preview, setPreview] = useState(false);
   const [embed, setEmbed] = useState<EmbedKind | null>(null);
@@ -87,8 +89,8 @@ export function AboutEditor({ value, onChange }: { value: string; onChange: (nex
             key={tool.label}
             type="button"
             onClick={() => apply(tool)}
-            title={tool.label}
-            aria-label={tool.label}
+            title={t(tool.label)}
+            aria-label={t(tool.label)}
             className="grid h-8 w-8 place-items-center rounded-[6px] text-ink-subtle transition-colors hover:bg-raised hover:text-ink active:scale-90 motion-reduce:active:scale-100"
           >
             <tool.icon size={15} strokeWidth={2.1} />
@@ -99,7 +101,7 @@ export function AboutEditor({ value, onChange }: { value: string; onChange: (nex
           onClick={() => setPreview((p) => !p)}
           className="ms-auto flex h-8 items-center gap-1.5 rounded-[6px] px-2.5 text-[12px] font-semibold text-ink-subtle transition-colors hover:bg-raised hover:text-ink"
         >
-          {preview ? <Pencil size={13} /> : <Eye size={14} />} {preview ? "Edit" : "Preview"}
+          {preview ? <Pencil size={13} /> : <Eye size={14} />} {preview ? t("Edit") : t("Preview")}
         </button>
       </div>
 
@@ -113,7 +115,7 @@ export function AboutEditor({ value, onChange }: { value: string; onChange: (nex
               dangerouslySetInnerHTML={{ __html: renderBbcode(value) }}
             />
           ) : (
-            <span className="text-[13px] text-ink-subtle">Nothing to preview yet.</span>
+            <span className="text-[13px] text-ink-subtle">{t("Nothing to preview yet.")}</span>
           )}
         </div>
       ) : (
@@ -122,7 +124,9 @@ export function AboutEditor({ value, onChange }: { value: string; onChange: (nex
           value={value}
           onChange={(e) => onChange(e.target.value)}
           rows={8}
-          placeholder="Show off. [b]bold[/b], [color=gold]color[/color], [youtube]link[/youtube], [img]https://...[/img] and more."
+          placeholder={t(
+            "Show off. [b]bold[/b], [color=gold]color[/color], [youtube]link[/youtube], [img]https://...[/img] and more.",
+          )}
           className="min-h-[120px] resize-y rounded-[8px] bg-canvas/40 p-3 text-[13.5px] leading-relaxed text-ink outline-none placeholder:text-ink-subtle focus:ring-1 focus:ring-edge"
         />
       )}

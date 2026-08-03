@@ -17,11 +17,11 @@ type DownloadGroup =
 type Filter = "all" | "active" | "saved" | "issues";
 
 function statusRank(s: DownloadItem["status"]): number {
-  return s === "downloading" ? 0 : s === "error" ? 1 : s === "done" ? 2 : 3;
+  return s === "downloading" || s === "paused" ? 0 : s === "error" ? 1 : s === "done" ? 2 : 3;
 }
 
 function matchesFilter(d: DownloadItem, f: Filter): boolean {
-  if (f === "active") return d.status === "downloading";
+  if (f === "active") return d.status === "downloading" || d.status === "paused";
   if (f === "saved") return d.status === "done";
   if (f === "issues") return d.status === "error" || d.status === "interrupted";
   return true;
@@ -77,6 +77,7 @@ export function DownloadsView({ active = false }: { active?: boolean }) {
     (sum, d) => (d.status === "downloading" ? sum + d.bytesPerSec : sum),
     0,
   );
+  const paused = items.filter((d) => d.status === "paused").length;
   const savedBytes = items.reduce(
     (sum, d) => (d.status === "done" ? sum + (d.totalBytes ?? d.receivedBytes) : sum),
     0,
@@ -86,7 +87,8 @@ export function DownloadsView({ active = false }: { active?: boolean }) {
       ? t("Saved movies and episodes for offline watching")
       : [
           t("{n} items", { n: items.length }),
-          counts.active > 0 ? t("{n} downloading", { n: counts.active }) : null,
+          counts.active - paused > 0 ? t("{n} downloading", { n: counts.active - paused }) : null,
+          paused > 0 ? t("{n} paused", { n: paused }) : null,
           totalBps > 0 ? `↓ ${fmtSpeed(totalBps)}` : null,
           savedBytes > 0 ? t("{size} saved", { size: fmtBytes(savedBytes) }) : null,
         ]
@@ -117,7 +119,7 @@ export function DownloadsView({ active = false }: { active?: boolean }) {
           <div className="mb-5 flex flex-wrap items-center gap-1.5">
             <FilterTab label={t("All")} count={counts.all} active={effective === "all"} onClick={() => setFilter("all")} />
             {counts.active > 0 && (
-              <FilterTab label={t("Downloading")} count={counts.active} active={effective === "active"} onClick={() => setFilter("active")} />
+              <FilterTab label={t("Active")} count={counts.active} active={effective === "active"} onClick={() => setFilter("active")} />
             )}
             {counts.saved > 0 && (
               <FilterTab label={t("Saved")} count={counts.saved} active={effective === "saved"} onClick={() => setFilter("saved")} />

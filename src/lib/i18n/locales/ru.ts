@@ -25,6 +25,9 @@ import extra from "./ru/extra";
 import manga from "./ru/manga";
 import controllers from "./ru/controllers";
 import plurals from "./ru/plurals";
+import people from "./ru/people";
+import profileCustomization from "./ru/profile-customization";
+import mobileManga from "./ru/mobile-manga";
 
 import used from "./ru/used";
 
@@ -56,6 +59,9 @@ const ru: Record<string, string> = {
   ...manga,
   ...controllers,
   ...plurals,
+  ...people,
+  ...profileCustomization,
+  ...mobileManga,
   ...used,
 };
 

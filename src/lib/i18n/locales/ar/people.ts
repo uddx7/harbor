@@ -1,0 +1,25 @@
+const people: Record<string, string> = {
+  "Harbor Rank": "Harbor Rank",
+  "Rising Stars": "النجوم الصاعدة",
+  "Contenders": "المتنافسون",
+  "Top on TMDB": "الأعلى على TMDB",
+  "Top on IMDb": "الأعلى على IMDb",
+  "Consensus": "الإجماع",
+  "Hall of Fame": "قاعة المشاهير",
+  "Trending now": "رائج الآن",
+  "Rising star": "نجم صاعد",
+  "In contention": "في المنافسة",
+  "Most popular": "الأكثر شعبية",
+  "Consensus #1": "الأول بالإجماع",
+  "Actors": "الممثلون",
+  "Actor": "الممثل",
+  "Our all-time ranking of a body of work, fully explained.": "ترتيبنا الشامل لمجمل الأعمال، موضّح بالتفصيل.",
+  "People from the week's hottest titles, weighted by what is being talked about.": "أشخاص من أبرز عناوين الأسبوع، مرجّحون حسب ما يتم تداوله.",
+  "Breakout talent from this week's hottest titles, before they are household names.": "مواهب صاعدة من أبرز عناوين الأسبوع، قبل أن تصبح أسماء مألوفة.",
+  "In the running this awards season, from the latest nominations and wins.": "في المنافسة هذا الموسم الجوائزي، حسب آخر الترشيحات والفوز.",
+  "Steady popularity across TMDB right now.": "شعبية ثابتة على TMDB حالياً.",
+  "Built from IMDb's public datasets. Career ratings volume.": "مبني على بيانات IMDb العامة. حجم تقييمات المسيرة المهنية.",
+  "A blend of the sources above by percentile. Degrades gracefully when one is missing.": "مزيج من المصادر أعلاه حسب المئينيات. يتكيّف بسلاسة عند غياب أحدها.",
+};
+
+export default people;

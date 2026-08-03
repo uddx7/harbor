@@ -293,7 +293,13 @@ export function ProfileView({
               <ProfileAudioCard audioUrl={summary.audioUrl} />
               <MinecraftCard name={summary.minecraftName} background={summary.minecraftBg} hideTitle={c.hideCardTitles} />
               <WatchNowCard watching={summary.watching} />
-              <FriendsPanel friends={friends} onOpen={onOpenProfile} isOwner={summary.isOwner} total={summary.counts.friends} />
+              <FriendsPanel
+                friends={summary.isOwner || summary.friendsPublic ? friends : []}
+                onOpen={onOpenProfile}
+                isOwner={summary.isOwner}
+                total={summary.counts.friends}
+                visibilityPrivate={!summary.isOwner && !summary.friendsPublic}
+              />
               <GroupsPanel isOwner={summary.isOwner} handle={handle} />
               <SocialsPanel socials={summary.socials} isOwner={summary.isOwner} onSaved={patchSummary} />
             </aside>

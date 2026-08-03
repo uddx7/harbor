@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Minus, Plus } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { useMobileRemote } from "../mobile-remote";
 import { useRegisterSheet } from "../mobile-sheet-lock";
 import { SHEET_EXIT_CSS, useSheetPresence } from "../remote-extras";
@@ -8,6 +9,7 @@ import { useReducedMotion } from "@/lib/use-reduced-motion";
 const clampPage = (p: number, total: number) => Math.min(total, Math.max(1, p));
 
 export function PageJumpSheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const t = useT();
   const { snapshot, sendCommand } = useMobileRemote();
   const manga = snapshot.manga;
   const reduce = useReducedMotion();
@@ -48,7 +50,7 @@ export function PageJumpSheet({ open, onClose }: { open: boolean; onClose: () =>
         <div className="mx-auto h-1 w-10 rounded-full bg-ink/20" />
         <div className="flex flex-col items-center gap-1">
           <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
-            {isPair ? "Jump to spread" : "Jump to page"}
+            {isPair ? t("Jump to spread") : t("Jump to page")}
           </span>
           <span className={`font-bold leading-none tabular-nums text-ink ${isPair ? "text-[34px]" : "text-[44px]"}`}>
             {pageDisp}
@@ -57,7 +59,7 @@ export function PageJumpSheet({ open, onClose }: { open: boolean; onClose: () =>
         </div>
         <PageScrubber page={page} total={total} onChange={setPage} reduce={reduce} />
         <div className="flex items-center gap-3">
-          <Stepper label="Previous page" onPress={() => setPage((p) => clampPage(p - 1, total))}>
+          <Stepper label={t("Previous page")} onPress={() => setPage((p) => clampPage(p - 1, total))}>
             <Minus size={20} strokeWidth={2.4} />
           </Stepper>
           <button
@@ -65,9 +67,9 @@ export function PageJumpSheet({ open, onClose }: { open: boolean; onClose: () =>
             onClick={() => commit(page)}
             className="h-12 flex-1 rounded-full bg-accent text-[15px] font-semibold text-canvas transition-transform active:scale-[0.97]"
           >
-            {isPair ? `Go to pages ${pageDisp}` : `Go to page ${page}`}
+            {isPair ? t("Go to pages {range}", { range: pageDisp }) : t("Go to page {n}", { n: page })}
           </button>
-          <Stepper label="Next page" onPress={() => setPage((p) => clampPage(p + 1, total))}>
+          <Stepper label={t("Next page")} onPress={() => setPage((p) => clampPage(p + 1, total))}>
             <Plus size={20} strokeWidth={2.4} />
           </Stepper>
         </div>

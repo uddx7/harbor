@@ -1,9 +1,11 @@
 const chrome: Record<string, string> = {
   "nav.home": "Início",
   "nav.discover": "Descobrir",
+  "nav.catalogs": "Catálogos",
   "nav.movies": "Filmes",
   "nav.shows": "Séries",
   "nav.anime": "Animes",
+  "nav.manga": "Mangá",
   "nav.live": "TV ao Vivo",
   "nav.playlists": "Playlists",
   "nav.calendar": "Calendário",

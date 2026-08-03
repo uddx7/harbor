@@ -11,6 +11,8 @@ const downloads: Record<string, string> = {
   Canceled: "أُلغي",
   "Interrupted: re-download to finish": "قوطع: أعد التنزيل للإكمال",
   "Cancel download": "إلغاء التنزيل",
+  "Pause download": "إيقاف مؤقت للتنزيل",
+  "Resume download": "استئناف التنزيل",
   "Delete download and file": "حذف التنزيل والملف",
   Download: "تنزيل",
   "Download video": "تنزيل الفيديو",
