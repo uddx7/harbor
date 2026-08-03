@@ -1,0 +1,583 @@
+# Instincts generated from https://github.com/uddx7/harbor
+# Generated: 2026-08-03T05:23:01.912Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: harbor-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Commit Length
+
+## Action
+
+Write moderate-length commit messages (~53 characters)
+
+## Evidence
+
+- Average commit message length: 53 chars
+- Based on 36 commits
+
+---
+id: harbor-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: harbor-import-alias
+trigger: "when importing modules"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Import Alias
+
+## Action
+
+Use path aliases (@/, ~/) instead of relative imports
+
+## Evidence
+
+- Import analysis shows alias pattern
+- Example: import { x } from '@/lib/x'
+
+---
+id: harbor-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: harbor-arch-type-based
+trigger: "when adding new code"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Arch Type Based
+
+## Action
+
+Place code in the appropriate type folder (components/, services/, utils/, etc.)
+
+## Evidence
+
+- Type-based module organization detected
+- Folders: chrome, components, lib, views, assets
+
+---
+id: harbor-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: harbor-test-naming
+trigger: "when creating a test file"
+confidence: 0.85
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Test Naming
+
+## Action
+
+Name test files using the pattern: *.test.ts
+
+## Evidence
+
+- File pattern: *.test.ts
+- Consistent across test files
+
+---
+id: harbor-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~8x per month
+- Files: src/chrome/*, src/components/*, src/lib/*
+
+---
+id: harbor-workflow-feature-or-ui-enhancement-with-settings-integration
+trigger: "when doing feature or ui enhancement with settings integration"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow Feature Or Ui Enhancement With Settings Integration
+
+## Action
+
+Follow the feature-or-ui-enhancement-with-settings-integration workflow:
+1. Edit or create feature/component files (e.g. in src/components/, src/chrome/, src/views/)
+2. Update settings logic (src/lib/settings/defaults.ts, src/lib/settings/types.ts, sometimes src/lib/settings/load.ts)
+3. Update UI panels that expose the new setting (e.g. src/views/settings/...)
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: src/lib/settings/defaults.ts, src/lib/settings/types.ts, src/lib/settings/load.ts
+
+---
+id: harbor-workflow-i18n-locale-addition-or-expansion
+trigger: "when doing i18n locale addition or expansion"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow I18n Locale Addition Or Expansion
+
+## Action
+
+Follow the i18n-locale-addition-or-expansion workflow:
+1. Add or update translation JSON files (src/lib/i18n/locales/*.json or *.ts)
+2. Register or update locale in src/lib/i18n/index.ts
+3. Optionally update .gitignore or documentation to reflect new locale
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: src/lib/i18n/locales/*.json, src/lib/i18n/locales/*.ts, src/lib/i18n/index.ts
+
+---
+id: harbor-workflow-player-ui-polish-or-overlay-update
+trigger: "when doing player ui polish or overlay update"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow Player Ui Polish Or Overlay Update
+
+## Action
+
+Follow the player-ui-polish-or-overlay-update workflow:
+1. Edit player overlay/control components (src/components/player/...)
+2. Edit overlay containers or layers (src/views/player/...)
+3. Sometimes update shared surfaces (e.g. LiquidGlassSurface components)
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: src/components/player/**/*.tsx, src/views/player/**/*.tsx, src/components/ThreeLiquidGlassSurface.tsx
+
+---
+id: harbor-workflow-security-fix-in-native-backend
+trigger: "when doing security fix in native backend"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow Security Fix In Native Backend
+
+## Action
+
+Follow the security-fix-in-native-backend workflow:
+1. Edit src-tauri/src/*.rs files to patch vulnerabilities
+2. Update argument handling, serialization, or validation logic
+3. Sometimes update related documentation or merge PRs
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: src-tauri/src/*.rs
+
+---
+id: harbor-workflow-merge-main-into-feature-or-fix-branch
+trigger: "when doing merge main into feature or fix branch"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/uddx7/harbor
+---
+
+# Harbor Workflow Merge Main Into Feature Or Fix Branch
+
+## Action
+
+Follow the merge-main-into-feature-or-fix-branch workflow:
+1. Merge main into the feature/fix branch
+2. Resolve conflicts across a wide set of files
+3. Commit the merged state
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: * (broad set, but often includes README.md, src/components/, src/lib/, src/views/, etc.)
+
+---
+id: harbor-instinct-file-naming
+trigger: "When creating or renaming a file in the codebase"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct File Naming
+
+## Action
+
+Name the file using snake_case
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.files: snake_case
+
+---
+id: harbor-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.functions: camelCase
+
+---
+id: harbor-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.classes: PascalCase
+
+---
+id: harbor-instinct-constant-naming
+trigger: "When defining a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern in codeStyle.namingConventions.constants: SCREAMING_SNAKE_CASE
+
+---
+id: harbor-instinct-import-alias
+trigger: "When importing modules"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Import Alias
+
+## Action
+
+Use alias-based import paths
+
+## Evidence
+
+- Pattern in codeStyle.importStyle: alias
+
+---
+id: harbor-instinct-export-named
+trigger: "When exporting modules or functions"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Export Named
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in codeStyle.exportStyle: named
+
+---
+id: harbor-instinct-test-file-pattern
+trigger: "When creating a test file"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Test File Pattern
+
+## Action
+
+Name the test file with the pattern *.test.ts
+
+## Evidence
+
+- Pattern in testing.filePattern: *.test.ts
+
+---
+id: harbor-instinct-test-type-unit
+trigger: "When writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Test Type Unit
+
+## Action
+
+Write unit tests
+
+## Evidence
+
+- Pattern in testing.testTypes: unit
+
+---
+id: harbor-instinct-commit-prefix
+trigger: "When writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Commit Prefix
+
+## Action
+
+Prefix the commit message with fix, feat, docs, or i18n as appropriate
+
+## Evidence
+
+- Seen in commit: fix: self-heal poster loads after transient image failures (#972)
+- Seen in commit: feat: support native SVP on Linux (#990)
+- Seen in commit: docs: link unofficial Linux packages
+- Seen in commit: i18n(ar): translate remaining English strings across Settings, Account, Downloads
+
+---
+id: harbor-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Commit Length
+
+## Action
+
+Keep the commit message concise, around 50-60 characters
+
+## Evidence
+
+- Pattern in commits.averageLength: 53
+
+---
+id: harbor-instinct-feature-settings-workflow
+trigger: "When adding or updating a feature that requires new settings, options, or configuration"
+confidence: 0.92
+domain: workflow
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Feature Settings Workflow
+
+## Action
+
+Edit or create feature/component files, update settings logic/types/defaults, and update UI panels that expose the new setting
+
+## Evidence
+
+- Workflow: feature-or-ui-enhancement-with-settings-integration
+- Pattern in files: src/lib/settings/defaults.ts, src/lib/settings/types.ts, src/lib/settings/load.ts, src/views/settings/**/*.tsx, src/components/**/*.tsx, src/chrome/**/*.tsx
+
+---
+id: harbor-instinct-i18n-locale-workflow
+trigger: "When adding a new language or filling in missing translations"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct I18n Locale Workflow
+
+## Action
+
+Add or update translation files, register or update the locale, and optionally update .gitignore or documentation
+
+## Evidence
+
+- Workflow: i18n-locale-addition-or-expansion
+- Pattern in files: src/lib/i18n/locales/*.json, src/lib/i18n/locales/*.ts, src/lib/i18n/index.ts, .gitignore
+
+---
+id: harbor-instinct-player-ui-polish-workflow
+trigger: "When improving or fixing the player UI/UX, overlays, or HUDs"
+confidence: 0.88
+domain: workflow
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Player Ui Polish Workflow
+
+## Action
+
+Edit player overlay/control components, overlay containers/layers, and sometimes shared surfaces
+
+## Evidence
+
+- Workflow: player-ui-polish-or-overlay-update
+- Pattern in files: src/components/player/**/*.tsx, src/views/player/**/*.tsx, src/components/ThreeLiquidGlassSurface.tsx, src/components/ExperimentalLiquidGlassSurface.tsx
+
+---
+id: harbor-instinct-security-fix-native-backend
+trigger: "When a security vulnerability is found in the native backend"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Security Fix Native Backend
+
+## Action
+
+Edit src-tauri/src/*.rs files to patch vulnerabilities and update argument handling, serialization, or validation logic
+
+## Evidence
+
+- Workflow: security-fix-in-native-backend
+- Pattern in files: src-tauri/src/*.rs
+
+---
+id: harbor-instinct-merge-main-workflow
+trigger: "When a feature or fix branch needs to be rebased or merged with main before PR or release"
+confidence: 0.87
+domain: workflow
+source: repo-analysis
+source_repo: uddx7/harbor
+---
+
+# Harbor Instinct Merge Main Workflow
+
+## Action
+
+Merge main into the branch, resolve conflicts, and commit the merged state
+
+## Evidence
+
+- Workflow: merge-main-into-feature-or-fix-branch
+- Pattern in files: broad set, often includes README.md, src/components/, src/lib/, src/views/
+
