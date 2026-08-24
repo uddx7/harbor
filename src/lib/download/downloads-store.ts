@@ -19,7 +19,13 @@ export type DownloadItem = {
   streamLabel: string | null;
   url: string;
   path: string;
-  status: "downloading" | "paused" | "done" | "error" | "canceled" | "interrupted";
+  status:
+    | "downloading"
+    | "paused"
+    | "done"
+    | "error"
+    | "canceled"
+    | "interrupted";
   receivedBytes: number;
   totalBytes: number | null;
   ratio: number;
@@ -69,9 +75,12 @@ function hydrate() {
     const arr = JSON.parse(raw) as DownloadItem[];
     if (!Array.isArray(arr)) return;
     for (const d of arr) {
-      if (!d || typeof d.id !== "string" || typeof d.path !== "string") continue;
+      if (!d || typeof d.id !== "string" || typeof d.path !== "string")
+        continue;
       const status =
-        d.status === "downloading" || d.status === "paused" ? "interrupted" : d.status;
+        d.status === "downloading" || d.status === "paused"
+          ? "interrupted"
+          : d.status;
       items.set(d.id, { ...d, status, bytesPerSec: 0 });
     }
     snapshot = [...items.values()].sort((a, b) => b.startedAt - a.startedAt);
@@ -132,7 +141,8 @@ async function uniquePath(path: string): Promise<string> {
 }
 
 function randomId(): string {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) return crypto.randomUUID();
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto)
+    return crypto.randomUUID();
   return `${Date.now().toString(36)}${Math.floor(performance.now()).toString(36)}`;
 }
 
@@ -153,12 +163,39 @@ export function activeDownloadFor(
   return null;
 }
 
+export function isCompletedDownload(
+  url?: string,
+  metaId?: string,
+  season?: number | null,
+  episode?: number | null,
+): boolean {
+  for (const d of items.values()) {
+    if (d.status !== "done") continue;
+    if (url && (d.path === url || d.url === url)) return true;
+    if (metaId && d.metaId === metaId) {
+      if (season != null && episode != null) {
+        if (d.season === season && d.episode === episode) return true;
+      } else if (
+        season == null &&
+        episode == null &&
+        d.season == null &&
+        d.episode == null
+      ) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 export async function enqueueDownload(args: EnqueueArgs): Promise<string> {
   const { meta, episode, streamLabel, url, headers } = args;
   let dir = await resolveDir();
   try {
     const raw = localStorage.getItem("harbor.settings");
-    const settings = raw ? (JSON.parse(raw) as { downloadCreateFolders?: boolean }) : null;
+    const settings = raw
+      ? (JSON.parse(raw) as { downloadCreateFolders?: boolean })
+      : null;
     if (settings?.downloadCreateFolders && dir) {
       const folderName = sanitizeName(meta.name || "download");
       dir = `${dir}${dir.endsWith(sep()) ? "" : sep()}${folderName}`;
@@ -192,7 +229,8 @@ export async function enqueueDownload(args: EnqueueArgs): Promise<string> {
     startedAt: Date.now(),
   };
   items.set(id, item);
-  if (headers && Object.keys(headers).length > 0) requestHeaders.set(id, headers);
+  if (headers && Object.keys(headers).length > 0)
+    requestHeaders.set(id, headers);
   rebuild();
 
   beginDownload(id);
@@ -250,7 +288,8 @@ function beginDownload(id: string): void {
 
 export function cancelDownload(id: string): void {
   const item = items.get(id);
-  if (!item || (item.status !== "downloading" && item.status !== "paused")) return;
+  if (!item || (item.status !== "downloading" && item.status !== "paused"))
+    return;
   patch(id, { status: "canceled", bytesPerSec: 0 });
   requestHeaders.delete(id);
   handles.get(id)?.abort();
@@ -311,5 +350,6 @@ export function useDownloads(): DownloadItem[] {
 
 export function useActiveDownloadCount(): number {
   const all = useDownloads();
-  return all.filter((d) => d.status === "downloading" || d.status === "paused").length;
+  return all.filter((d) => d.status === "downloading" || d.status === "paused")
+    .length;
 }

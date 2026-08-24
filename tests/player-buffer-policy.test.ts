@@ -5,8 +5,33 @@ import test from "node:test";
 import type { Settings } from "../src/lib/settings/types.ts";
 import { compileMpvOptions, svpMpvLines } from "../src/lib/player/mpv-tuning.ts";
 import { resolvePlaybackDownloadedFraction } from "../src/lib/player/playback-clock.ts";
+import { isLocalUrl } from "../src/lib/player/local-url.ts";
+
+test("isLocalUrl recognizes local filesystem paths and custom asset protocols", () => {
+  assert.equal(isLocalUrl("C:\\Downloads\\movie.mkv"), true);
+  assert.equal(isLocalUrl("c:/Downloads/movie.mkv"), true);
+  assert.equal(isLocalUrl("/home/user/Downloads/movie.mkv"), true);
+  assert.equal(isLocalUrl("file:///C:/Downloads/movie.mkv"), true);
+  assert.equal(isLocalUrl("asset://localhost/C%3A/movie.mkv"), true);
+  assert.equal(isLocalUrl("http://asset.localhost/C%3A/movie.mkv"), true);
+  assert.equal(isLocalUrl("https://asset.localhost/C%3A/movie.mkv"), true);
+  assert.equal(isLocalUrl("tauri://localhost/video.mp4"), true);
+  assert.equal(isLocalUrl("relative/folder/video.mp4"), true);
+  assert.equal(isLocalUrl("http://127.0.0.1:11470/stream"), false);
+  assert.equal(isLocalUrl("https://realdebrid.com/d/12345/video.mkv"), false);
+  assert.equal(isLocalUrl("magnet:?xt=urn:btih:..."), false);
+});
 
 test("only the P2P engine reports whole-file download progress", () => {
+  assert.equal(
+    resolvePlaybackDownloadedFraction({
+      isLocal: true,
+      isP2pEngine: false,
+      streamProgress: 0,
+      streamLen: 0,
+    }),
+    1,
+  );
   assert.equal(
     resolvePlaybackDownloadedFraction({
       isP2pEngine: true,

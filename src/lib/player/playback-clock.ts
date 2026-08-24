@@ -6,10 +6,12 @@ let downloadedFraction = 0;
 const listeners = new Set<() => void>();
 
 export function resolvePlaybackDownloadedFraction(input: {
+  isLocal?: boolean;
   isP2pEngine: boolean;
   streamProgress: number;
   streamLen: number;
 }): number {
+  if (input.isLocal) return 1;
   if (!input.isP2pEngine || input.streamLen <= 0) return 0;
   return Math.max(0, Math.min(1, input.streamProgress / input.streamLen));
 }
@@ -102,6 +104,14 @@ export function usePlaybackBufferedGated(active: boolean): number {
     active ? subscribePlaybackClock : NEVER,
     () => bufferedSec,
     () => bufferedSec,
+  );
+}
+
+export function usePlaybackDownloaded(): number {
+  return useSyncExternalStore(
+    subscribePlaybackClock,
+    () => downloadedFraction,
+    () => downloadedFraction,
   );
 }
 

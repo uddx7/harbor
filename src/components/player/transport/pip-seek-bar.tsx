@@ -1,5 +1,9 @@
 import { useRef, useState } from "react";
-import { usePlaybackPosition, usePlaybackBuffered } from "@/lib/player/playback-clock";
+import {
+  usePlaybackPosition,
+  usePlaybackBuffered,
+  usePlaybackDownloaded,
+} from "@/lib/player/playback-clock";
 
 export function PipSeekBar({
   durationSec,
@@ -12,10 +16,13 @@ export function PipSeekBar({
   const [scrub, setScrub] = useState<number | null>(null);
   const position = usePlaybackPosition();
   const buffered = usePlaybackBuffered();
+  const downloaded = usePlaybackDownloaded();
   const dur = durationSec || 1;
   const value = scrub ?? position;
   const pct = Math.max(0, Math.min(1, value / dur)) * 100;
-  const bufferedPct = Math.max(0, Math.min(1, (position + buffered) / dur)) * 100;
+  const fullyCached = downloaded >= 0.999;
+  const cacheFill = Math.max(0, Math.min(1, (position + buffered) / dur));
+  const bufferedPct = fullyCached ? 0 : Math.max(cacheFill, downloaded) * 100;
 
   const fromEvent = (clientX: number): number => {
     const r = ref.current?.getBoundingClientRect();

@@ -7,7 +7,9 @@ import { anime4kShadersFor, type Anime4kChoice } from "./use-anime4k";
 import { generalShaderChain, generalShaderKey, shaderCompanionOptions } from "@/lib/player/shader-chain";
 import type { PlayerSrc } from "@/lib/view";
 import type { Settings } from "@/lib/settings";
-import { setPlaybackClock } from "@/lib/player/playback-clock";
+import { setPlaybackClock, setPlaybackDownloaded } from "@/lib/player/playback-clock";
+import { isLocalUrl } from "@/lib/player/local-url";
+import { isCompletedDownload } from "@/lib/download/downloads-store";
 import { isLinuxDesktop, isWindowsDesktop } from "@/lib/platform";
 import { svpEnsureRunning, svpStatus } from "@/lib/svp";
 import { isSvpActiveForMedia } from "@/lib/player/svp-policy";
@@ -141,6 +143,17 @@ export function usePlayerBridge(params: {
           setSnap(s);
         }
       });
+      if (
+        isLocalUrl(src.url) ||
+        isCompletedDownload(
+          src.url,
+          src.meta.id,
+          src.episode?.season ?? null,
+          src.episode?.episode ?? null,
+        )
+      ) {
+        setPlaybackDownloaded(1);
+      }
       setBridgeReady(true);
     })();
     return () => {
@@ -150,6 +163,7 @@ export function usePlayerBridge(params: {
       bridge?.destroy();
       bridgeRef.current = null;
       setPlaybackClock(0, 0);
+      setPlaybackDownloaded(0);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bridgeKey, svpPending]);

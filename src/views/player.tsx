@@ -13,6 +13,7 @@ import { useQueue, useSleepAtEnd, queueIndexOf, setQueuePlaying } from "@/lib/qu
 import { useSkipSegments, useAdSegments } from "@/lib/skip-intro";
 import { withinAdWindow } from "@/lib/ad-report/window";
 import { isLocalUrl } from "@/lib/player/local-url";
+import { isCompletedDownload } from "@/lib/download/downloads-store";
 import { hasPlaybackStartedForStallCheck, stallWaitMs } from "@/lib/player/stall-wait";
 import { useAuth } from "@/lib/auth";
 import { embedFlags } from "./player/player-utils";
@@ -151,9 +152,18 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     src,
     settings,
   });
+  const isLocalSrc =
+    isLocalUrl(src.url) ||
+    isCompletedDownload(
+      src.url,
+      src.meta.id,
+      src.episode?.season ?? null,
+      src.episode?.episode ?? null,
+    );
   const isP2pEngine =
     (isBundledEngineUrl(src.url) || isLocalEngineUrl(src.url)) &&
     !src.url.includes("/hlsv2/") &&
+    !isLocalSrc &&
     !!src.streamRef?.infoHash;
   const { stats: engineStats, genuineFailure } = useEngineStats({
     url: src.url,
@@ -162,23 +172,33 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     active: snap.status !== "ended" && (snap.videoWidth <= 0 || isP2pEngine),
   });
   useEffect(() => {
-    const isLive = src.isLive || !!src.meta.id?.startsWith("iptv:");
-    const isHls = src.url.includes("/hlsv2/");
-    if (isP2pEngine) {
+    if (isLocalSrc) {
+      setPlaybackDownloaded(1);
+    } else if (isP2pEngine) {
       setPlaybackDownloaded(
         resolvePlaybackDownloadedFraction({
+          isLocal: false,
           isP2pEngine,
           streamProgress: engineStats?.streamProgress ?? 0,
           streamLen: engineStats?.streamLen ?? 0,
         }),
       );
-    } else if (!isLive && !isHls) {
-      const dur = snap.durationSec || 0;
-      setPlaybackDownloaded(dur > 0 ? Math.min(1, (snap.positionSec + snap.bufferedSec) / dur) : 0);
     } else {
       setPlaybackDownloaded(0);
     }
-  }, [engineStats?.streamProgress, engineStats?.streamLen, src.url, isP2pEngine, src.isLive, src.meta.id, snap.positionSec, snap.bufferedSec, snap.durationSec]);
+  }, [
+    engineStats?.streamProgress,
+    engineStats?.streamLen,
+    src.url,
+    isLocalSrc,
+    isP2pEngine,
+    bridgeReady,
+  ]);
+  useEffect(() => {
+    return () => {
+      setPlaybackDownloaded(0);
+    };
+  }, []);
   const shellSnapRef = useRef(snap);
   const snapRef = useRef(snap);
   snapRef.current = snap;
@@ -814,7 +834,6 @@ export function PlayerView({ src }: { src: PlayerSrc }) {
     exitPlayer,
   });
 
-  const isLocalSrc = isLocalUrl(src.url);
   const cancelToPicker = useCallback(() => {
     if (isLocalSrc || src.meta.id?.startsWith("iptv:")) {
       void closePlayer();
