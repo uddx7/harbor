@@ -6,13 +6,15 @@ import { HoverTooltip } from "@/components/hover-tooltip";
 import { emitListToast } from "@/components/lists/list-toast";
 import { useT } from "@/lib/i18n";
 import {
-  ensureNotifyPermission,
   playTone,
   removeReminder,
   setReminder,
   useReminder,
   type ReminderTone,
 } from "@/lib/reminders";
+import { ensureDesktopNotifyPermission } from "@/lib/desktop-notify";
+import { isWeb } from "@/lib/platform";
+import { useSettings } from "@/lib/settings";
 
 const TONES: Array<{ id: ReminderTone; label: string }> = [
   { id: "chime", label: "Chime" },
@@ -39,11 +41,14 @@ function ReminderMenu({
   onClose: () => void;
 }) {
   const t = useT();
+  const { settings } = useSettings();
   const existing = useReminder(seed.id);
   const active = !!existing;
   const [episodes, setEpisodes] = useState(true);
   const [seasons, setSeasons] = useState(true);
   const [tone, setTone] = useState<ReminderTone>("chime");
+  const toneSuperseded =
+    !isWeb() && settings.desktopNotificationsEnabled && settings.notifyNewEpisodes;
 
   useEffect(() => {
     if (!open) return;
@@ -69,7 +74,7 @@ function ReminderMenu({
     });
     onClose();
     emitListToast(active ? t("Reminder updated") : t("Reminder set"));
-    void ensureNotifyPermission();
+    void ensureDesktopNotifyPermission();
   };
 
   const remove = () => {
@@ -132,27 +137,37 @@ function ReminderMenu({
             </button>
           ))}
         </div>
-        <div className="px-3.5 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-ink-subtle">
-          {t("Tone")}
-        </div>
-        <div className="grid grid-cols-3 gap-1.5 px-3.5">
-          {TONES.map((o) => (
-            <button
-              key={o.id}
-              onClick={() => {
-                setTone(o.id);
-                playTone(o.id);
-              }}
-              className={`h-9 rounded-lg text-[12.5px] font-medium transition-colors ${
-                tone === o.id
-                  ? "bg-raised text-ink ring-1 ring-edge"
-                  : "bg-canvas/40 text-ink-muted hover:bg-raised hover:text-ink"
-              }`}
-            >
-              {t(o.label)}
-            </button>
-          ))}
-        </div>
+        {toneSuperseded ? (
+          <p className="px-3.5 pb-1.5 text-[11px] leading-snug text-ink-subtle">
+            {t(
+              "Desktop notifications already play a sound for this. Turn them off for episodes in Settings to pick a tone here instead.",
+            )}
+          </p>
+        ) : (
+          <>
+            <div className="px-3.5 pb-1.5 text-[10.5px] font-semibold uppercase tracking-[0.18em] text-ink-subtle">
+              {t("Tone")}
+            </div>
+            <div className="grid grid-cols-3 gap-1.5 px-3.5">
+              {TONES.map((o) => (
+                <button
+                  key={o.id}
+                  onClick={() => {
+                    setTone(o.id);
+                    playTone(o.id);
+                  }}
+                  className={`h-9 rounded-lg text-[12.5px] font-medium transition-colors ${
+                    tone === o.id
+                      ? "bg-raised text-ink ring-1 ring-edge"
+                      : "bg-canvas/40 text-ink-muted hover:bg-raised hover:text-ink"
+                  }`}
+                >
+                  {t(o.label)}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
         <div className="p-3.5 pt-3">
           <button
             onClick={save}

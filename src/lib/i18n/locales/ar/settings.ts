@@ -1601,6 +1601,21 @@ const settings: Record<string, string> = {
   Downloads: "التنزيلات",
   "Where Harbor saves videos when you hit Download in the player. Pick any folder, including one on a different drive.":
     "المكان الذي يحفظ فيه Harbor الفيديوهات عند الضغط على تنزيل. اختر أي مجلد، حتى لو كان على محرك أقراص آخر.",
+  "Desktop notifications": "تنبيهات سطح المكتب",
+  "Native OS notifications when a reminder fires or a download finishes. Clicking one opens Harbor to the right place.":
+    "تنبيهات نظام التشغيل الأصلية عند إطلاق تذكير أو اكتمال تحميل. الضغط على التنبيه يفتح Harbor في المكان المناسب.",
+  "Show OS notifications for episode reminders, downloads, badges, and friend requests":
+    "إظهار تنبيهات نظام التشغيل لتذكيرات الحلقات والتحميلات وشارات الإنجاز وطلبات الصداقة",
+  "Notify about new episodes": "التنبيه عن الحلقات الجديدة",
+  "Notify when a download finishes": "التنبيه عند اكتمال التحميل",
+  "Notify about new badges": "التنبيه عن شارات الإنجاز الجديدة",
+  "Notify about friend requests": "التنبيه عن طلبات الصداقة",
+  "{name} sent you a friend request": "{name} أرسل لك طلب صداقة",
+  "{n} new badges": "{n} شارات جديدة",
+  "{n} new friend requests": "{n} طلبات صداقة جديدة",
+  "Enable desktop notifications first": "فعّل تنبيهات سطح المكتب أولاً",
+  "Desktop notifications already play a sound for this. Turn them off for episodes in Settings to pick a tone here instead.":
+    "تنبيهات سطح المكتب تشغّل صوتًا لهذا بالفعل. أوقفها عن الحلقات من الإعدادات عشان تقدر تختار نغمة هنا.",
   HTML5: "HTML5",
   mpv: "mpv",
   "Anime4K upscaling": "تحسين Anime4K",

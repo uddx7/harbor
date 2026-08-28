@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { setItemWithRecovery } from "@/lib/storage-recovery";
+import { readDesktopNotifySettings, sendDesktopNotification } from "@/lib/desktop-notify";
 
 const KEY = "harbor.reminders.v1";
 
@@ -179,25 +180,19 @@ export function playTone(tone: ReminderTone): void {
   }
 }
 
-export async function ensureNotifyPermission(): Promise<boolean> {
-  try {
-    if (!("Notification" in window)) return false;
-    if (Notification.permission === "granted") return true;
-    if (Notification.permission === "denied") return false;
-    const res = await Notification.requestPermission();
-    return res === "granted";
-  } catch {
-    return false;
-  }
-}
-
 export function fireReminderNotification(entry: ReminderEntry, title: string, body: string): void {
-  playTone(entry.tone);
-  try {
-    if ("Notification" in window && Notification.permission === "granted") {
-      new Notification(title, { body, silent: true });
-    }
-  } catch {
-    /* notification unavailable */
+  if (!readDesktopNotifySettings().notifyNewEpisodes) {
+    playTone(entry.tone);
+    return;
   }
+  void sendDesktopNotification({
+    title,
+    body,
+    navTarget: {
+      kind: "meta",
+      meta: { id: entry.id, type: entry.type, name: entry.name, poster: entry.poster },
+    },
+  }).then((playedOsSound) => {
+    if (!playedOsSound) playTone(entry.tone);
+  });
 }

@@ -77,6 +77,7 @@ import { useActivitySync } from "@/lib/social/use-activity-sync";
 import { authToken, currentAuthor, refreshToken } from "@/lib/theme-auth";
 import { useAutoDownloadRunner } from "@/lib/auto-download/runner";
 import { RemindersRunner } from "@/lib/reminders-runner";
+import { DesktopNotifyBridge } from "@/lib/desktop-notify-bridge";
 import { MangaTrackingRunner } from "@/lib/manga-tracking";
 import { RemoteHostMount } from "@/lib/remote/host-mount";
 import { RemoteOpenBridge } from "@/lib/remote/remote-open-bridge";
@@ -392,6 +393,7 @@ export function App({ onReady }: { onReady?: () => void }) {
                                                   <ActivitySyncRunner />
                                                   <AutoDownloadRunner />
                                                   <RemindersRunner />
+                                                  <DesktopNotifyBridge />
                                                   <MangaTrackingRunner />
                                                   <RemoteHostMount />
                                                   <RemoteOpenBridge />

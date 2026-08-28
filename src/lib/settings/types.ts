@@ -575,6 +575,11 @@ export type Settings = {
   }>;
   downloadDir: string;
   downloadCreateFolders: boolean;
+  desktopNotificationsEnabled: boolean;
+  notifyNewEpisodes: boolean;
+  notifyDownloadsComplete: boolean;
+  notifyNewBadges: boolean;
+  notifyFriendRequests: boolean;
   stremioDeeplinkInstall: boolean;
   iptvLiveContainer: "ts" | "m3u8";
   iptvForceProxy: boolean;

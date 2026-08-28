@@ -32,6 +32,7 @@ export type SectionId =
   | "badges"
   | "awardIcons"
   | "webhooks"
+  | "desktopNotifications"
   | "bug"
   | "support"
   | "remotes"

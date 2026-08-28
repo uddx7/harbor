@@ -4,6 +4,7 @@ import { acceptFriend, declineFriend, fetchPendingRequests, type PendingRequest 
 import { fetchAllNotifications, markAllNotificationsRead, type CenterNotif } from "./notifications";
 import { dismissNotifs, isDismissed, subscribeDismissed } from "./dismissed-notifications";
 import { setUnreadCount } from "./unread-bridge";
+import { notifyNewSocialActivity } from "./social-desktop-notify";
 
 const POLL_MS = 60000;
 
@@ -40,6 +41,7 @@ export function useNotificationCenter() {
       setItems(feed.items);
       setUnread(feed.unread);
       setPending(reqs);
+      notifyNewSocialActivity(feed.items, reqs);
     } finally {
       if (!ac.signal.aborted) setLoading(false);
     }

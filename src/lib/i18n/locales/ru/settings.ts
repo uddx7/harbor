@@ -1088,6 +1088,21 @@ const settings: Record<string, string> = {
   Downloads: "Загрузки",
   "Where Harbor saves videos when you hit Download in the player. Pick any folder, including one on a different drive.":
     "Куда Harbor сохраняет видео при нажатии «Скачать» в плеере. Можно выбрать любую папку, в том числе на другом диске.",
+  "Desktop notifications": "Уведомления на рабочем столе",
+  "Native OS notifications when a reminder fires or a download finishes. Clicking one opens Harbor to the right place.":
+    "Нативные уведомления системы при срабатывании напоминания или завершении загрузки. Нажатие на уведомление открывает нужное место в Harbor.",
+  "Show OS notifications for episode reminders, downloads, badges, and friend requests":
+    "Показывать системные уведомления о напоминаниях по эпизодам, загрузках, значках и заявках в друзья",
+  "Notify about new episodes": "Уведомлять о новых эпизодах",
+  "Notify when a download finishes": "Уведомлять о завершении загрузки",
+  "Notify about new badges": "Уведомлять о новых значках",
+  "Notify about friend requests": "Уведомлять о заявках в друзья",
+  "{name} sent you a friend request": "{name} отправил(а) вам заявку в друзья",
+  "{n} new badges": "{n} новых значков",
+  "{n} new friend requests": "{n} новых заявок в друзья",
+  "Enable desktop notifications first": "Сначала включите уведомления на рабочем столе",
+  "Desktop notifications already play a sound for this. Turn them off for episodes in Settings to pick a tone here instead.":
+    "Уведомления на рабочем столе уже воспроизводят звук для этого. Отключите их для эпизодов в настройках, чтобы выбрать мелодию здесь.",
   HTML5: "HTML5",
   mpv: "mpv",
   "Anime4K upscaling": "Апскейлинг Anime4K",

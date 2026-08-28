@@ -337,6 +337,15 @@ function IconWebhooks(p: IconProps) {
   );
 }
 
+function IconDesktopNotifications(p: IconProps) {
+  return (
+    <IconBase {...p}>
+      <path d="M6.5 9.5a5.5 5.5 0 0 1 11 0c0 4 1.5 5.2 1.5 5.8H5c0-.6 1.5-1.8 1.5-5.8z" />
+      <path d="M10.3 18.5a1.9 1.9 0 0 0 3.4 0" />
+    </IconBase>
+  );
+}
+
 function IconTrakt(p: IconProps) {
   return (
     <IconBase {...p}>
@@ -850,6 +859,24 @@ const NAV_GROUPS: Array<{ heading: string | null; items: NavItem[] }> = [
         label: "Webhooks",
         Icon: IconWebhooks,
         keywords: ["discord", "telegram", "calendar", "alerts", "notifications", "rules"],
+      },
+      {
+        id: "desktopNotifications",
+        label: "Desktop notifications",
+        Icon: IconDesktopNotifications,
+        keywords: [
+          "desktop notification",
+          "desktop notifications",
+          "toast",
+          "native notification",
+          "os notification",
+          "download complete",
+          "download finished",
+          "episode notification",
+          "new episode alert",
+          "badge notification",
+          "friend request notification",
+        ],
       },
     ],
   },
@@ -1431,6 +1458,22 @@ const SETTINGS_OPTIONS: SettingsOption[] = [
       "path",
       "choose folder",
       "open folder",
+    ],
+  },
+  {
+    label: "Desktop notifications (episode & download alerts)",
+    section: "desktopNotifications",
+    anchorTitle: "Desktop notifications",
+    keywords: [
+      "desktop notification",
+      "desktop notifications",
+      "toast",
+      "native notification",
+      "os notification",
+      "download complete",
+      "download finished",
+      "episode notification",
+      "new episode alert",
     ],
   },
   {
@@ -8167,6 +8210,7 @@ export function SettingsNav({
     badges: null,
     awardIcons: null,
     webhooks: webhookActive ? "live" : null,
+    desktopNotifications: null,
     hotkeys: null,
     bug: null,
     support: null,

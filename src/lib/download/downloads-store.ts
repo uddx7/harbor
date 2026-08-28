@@ -7,6 +7,7 @@ import type { PlayEpisode } from "@/lib/view";
 import { buildDefaultFilename, sanitizeName } from "./filename";
 import { startDownload, type DownloadHandle } from "./video-download";
 import { isWindowsDesktop } from "@/lib/platform";
+import { readDesktopNotifySettings, sendDesktopNotification } from "@/lib/desktop-notify";
 import {
   localEngineStreamRef,
   pauseTorrentUsage,
@@ -303,7 +304,16 @@ function beginDownload(id: string): void {
   );
   handles.set(id, handle);
   const completion = handle.promise
-    .then(() => patch(id, { status: "done", ratio: 1, bytesPerSec: 0 }))
+    .then(() => {
+      patch(id, { status: "done", ratio: 1, bytesPerSec: 0 });
+      if (readDesktopNotifySettings().notifyDownloadsComplete) {
+        void sendDesktopNotification({
+          title: item.title,
+          body: item.subtitle ? `${item.subtitle} — Download complete` : "Download complete",
+          navTarget: { kind: "downloads" },
+        });
+      }
+    })
     .catch((e: unknown) => {
       if (e instanceof Error && e.name === "AbortError") {
         if (items.get(id)?.status === "paused") return;

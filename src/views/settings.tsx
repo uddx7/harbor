@@ -40,6 +40,7 @@ const ThemePanel = lazy(() => import("./settings/theme-panel").then((m) => ({ de
 const StreamBadgesPanel = lazy(() => import("./settings/stream-badges-panel").then((m) => ({ default: m.StreamBadgesPanel })));
 const AwardIconsPanel = lazy(() => import("./settings/award-icons-panel").then((m) => ({ default: m.AwardIconsPanel })));
 const WebhooksPanel = lazy(() => import("./settings/webhooks-panel").then((m) => ({ default: m.WebhooksPanel })));
+const DesktopNotificationsPanel = lazy(() => import("./settings/desktop-notifications-panel").then((m) => ({ default: m.DesktopNotificationsPanel })));
 const BugReportPanel = lazy(() => import("./settings/bug-report-panel").then((m) => ({ default: m.BugReportPanel })));
 const SupportPanel = lazy(() => import("./settings/support-panel").then((m) => ({ default: m.SupportPanel })));
 const RemotesPanel = lazy(() => import("./settings/remotes-panel").then((m) => ({ default: m.RemotesPanel })));
@@ -152,6 +153,10 @@ const SECTION_META: Record<SectionId, { label: string; sub: string }> = {
   webhooks: {
     label: "Webhooks",
     sub: "Push upcoming releases to Discord or Telegram. Pick which calendars feed the notifications.",
+  },
+  desktopNotifications: {
+    label: "Desktop notifications",
+    sub: "Native OS notifications when a reminder fires or a download finishes. Clicking one opens Harbor to the right place.",
   },
   bug: {
     label: "Report a bug",
@@ -404,6 +409,7 @@ export function Settings() {
           {active === "awardIcons" && <AwardIconsPanel />}
 
           {active === "webhooks" && <WebhooksPanel />}
+          {active === "desktopNotifications" && <DesktopNotificationsPanel />}
 
           {active === "bug" && <BugReportPanel />}
           {active === "support" && <SupportPanel />}
