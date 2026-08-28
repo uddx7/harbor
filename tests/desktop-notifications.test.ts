@@ -70,7 +70,7 @@ test("a pending nav target older than the TTL is discarded, not misdelivered to 
   try {
     Date.now = () => 1_000_000;
     setPendingNavTarget({ kind: "downloads" });
-    Date.now = () => 1_000_000 + 3 * 60 * 1000; // 3 minutes later, past the 2-minute TTL
+    Date.now = () => 1_000_000 + 3 * 60 * 1000;
     assert.equal(consumePendingNavTarget(), null);
   } finally {
     Date.now = realNow;
@@ -82,7 +82,7 @@ test("a pending nav target still within the TTL is delivered normally", () => {
   try {
     Date.now = () => 2_000_000;
     setPendingNavTarget({ kind: "downloads" });
-    Date.now = () => 2_000_000 + 60 * 1000; // 1 minute later, within the 2-minute TTL
+    Date.now = () => 2_000_000 + 60 * 1000;
     assert.deepEqual(consumePendingNavTarget(), { kind: "downloads" });
   } finally {
     Date.now = realNow;

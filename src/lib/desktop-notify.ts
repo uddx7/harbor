@@ -40,13 +40,6 @@ export function readDesktopNotifySettings(): DesktopNotifySettings {
   }
 }
 
-/**
- * How long a queued nav target stays eligible to be consumed. Window focus is
- * only a proxy for "the user clicked the notification" (the desktop plugin has
- * no real click callback), so an unconsumed target must expire rather than
- * sit around to be wrongly attached to some unrelated later focus event (e.g.
- * alt-tabbing back into Harbor for an unrelated reason).
- */
 const PENDING_NAV_TTL_MS = 2 * 60 * 1000;
 
 const pendingNavTargets: { target: DesktopNavTarget; at: number }[] = [];
@@ -86,13 +79,6 @@ export async function ensureDesktopNotifyPermission(): Promise<boolean> {
   }
 }
 
-/**
- * Sends a notification and reports whether the OS actually played its own
- * (uncontrollable) sound for it. The Tauri desktop plugin has no way to
- * silence that sound, so callers with their own audio cue (e.g. reminder
- * tones) use this to skip theirs and avoid two sounds firing at once. The
- * web fallback is always explicitly silent, so it never returns true.
- */
 export async function sendDesktopNotification(opts: {
   title: string;
   body: string;
@@ -103,9 +89,7 @@ export async function sendDesktopNotification(opts: {
     try {
       new Notification(opts.title, { body: opts.body, silent: true });
       if (opts.navTarget) setPendingNavTarget(opts.navTarget);
-    } catch {
-      /* browser notification unavailable */
-    }
+    } catch {}
     return false;
   }
   try {

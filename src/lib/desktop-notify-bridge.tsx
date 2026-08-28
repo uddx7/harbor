@@ -26,9 +26,7 @@ export function DesktopNotifyBridge() {
         if (cancelled) fn();
         else unlisten = fn;
       })
-      .catch(() => {
-        /* window focus events unavailable */
-      });
+      .catch(() => {});
 
     return () => {
       cancelled = true;

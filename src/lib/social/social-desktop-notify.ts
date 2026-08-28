@@ -27,26 +27,11 @@ function readSeen(): SeenState {
 function writeSeen(state: SeenState): void {
   try {
     localStorage.setItem(SEEN_KEY, JSON.stringify(state));
-  } catch {
-    /* ignore */
-  }
+  } catch {}
 }
 
-/**
- * Above this many new items in one pass, collapse them into a single summary
- * notification instead of firing one OS toast per item — bounds how many
- * notifications a single poll cycle can burst (e.g. after being offline a
- * while, or an unexpectedly large batch from the backend).
- */
 const BURST_THRESHOLD = 3;
 
-/**
- * Diffs the notification-center's latest badges and friend requests against
- * what we've already notified about, and fires desktop notifications for
- * anything new. On the very first call (no seen-state persisted yet) it
- * only records a baseline — it never bursts a notification per pre-existing
- * item the first time this runs after the feature ships.
- */
 export function notifyNewSocialActivity(items: CenterNotif[], pending: PendingRequest[]): void {
   const badgeIds = items.filter((n) => n.kind === "badge-received").map((n) => n.id);
   const requestIds = pending.map((r) => r.edgeId);
